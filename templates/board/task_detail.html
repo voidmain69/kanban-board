@@ -1,0 +1,24 @@
+<div class="card border-0">
+  <div class="card-body">
+    <h5 class="card-title">{{ task.name }}</h5>
+    <p class="card-text">{{ task.description }}</p>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">Deadline: {{ task.deadline }}</li>
+      <li class="list-group-item">Board: {{ task.board.name }}</li>
+      <li class="list-group-item">Priority: {{ task.get_priority_display }}</li>
+      <li class="list-group-item">Assignees:
+        <ul>
+          {% for assignee in task.assignees.all %}
+            <li>{{ assignee.username }}</li>
+          {% endfor %}
+        </ul>
+      </li>
+      <li class="list-group-item">Attachments:
+        <ul>
+          {% for attachment in task.attachments.all %}
+            <li><a href="{{ attachment.file.url }}">{{ attachment.name }}</a></li>
+          {% endfor %}
+        </ul>
+      </li>
+    </ul>
+  </div>
