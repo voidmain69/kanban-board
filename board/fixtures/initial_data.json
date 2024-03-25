@@ -1,0 +1,340 @@
+[
+  {
+    "model": "board.position",
+    "pk": 1,
+    "fields": {
+      "name": "Manager"
+    }
+  },
+  {
+    "model": "board.position",
+    "pk": 2,
+    "fields": {
+      "name": "Developer"
+    }
+  },
+  {
+    "model": "board.tasktype",
+    "pk": 1,
+    "fields": {
+      "name": "Feature"
+    }
+  },
+  {
+    "model": "board.tasktype",
+    "pk": 2,
+    "fields": {
+      "name": "Bug"
+    }
+  },
+  {
+    "model": "board.worker",
+    "pk": 1,
+    "fields": {
+      "username": "john_doe",
+      "password": "hashed_password",
+      "first_name": "John",
+      "last_name": "Doe",
+      "email": "john@example.com",
+      "position": 1,
+      "avatar": null
+    }
+  },
+  {
+    "model": "board.worker",
+    "pk": 2,
+    "fields": {
+      "username": "jane_smith",
+      "password": "hashed_password",
+      "first_name": "Jane",
+      "last_name": "Smith",
+      "email": "jane@example.com",
+      "position": 2,
+      "avatar": null
+    }
+  },
+  {
+    "model": "board.team",
+    "pk": 1,
+    "fields": {
+      "name": "Development Team 1",
+      "members": [1, 2]
+    }
+  },
+  {
+    "model": "board.team",
+    "pk": 2,
+    "fields": {
+      "name": "Development Team 2",
+      "members": [1]
+    }
+  },
+  {
+    "model": "board.board",
+    "pk": 1,
+    "fields": {
+      "name": "Main Board 1",
+      "project": 1,
+      "color": "#FFFFFF"
+    }
+  },
+  {
+    "model": "board.board",
+    "pk": 2,
+    "fields": {
+      "name": "Main Board 2",
+      "project": 1,
+      "color": "#FFFFFF"
+    }
+  },
+  {
+    "model": "board.board",
+    "pk": 3,
+    "fields": {
+      "name": "Main Board 3",
+      "project": 1,
+      "color": "#FFFFFF"
+    }
+  },
+  {
+    "model": "board.board",
+    "pk": 4,
+    "fields": {
+      "name": "Main Board 4",
+      "project": 1,
+      "color": "#FFFFFF"
+    }
+  },
+  {
+    "model": "board.project",
+    "pk": 1,
+    "fields": {
+      "name": "Project 1",
+      "team": 1,
+      "description": "Sample project description 1.",
+      "deadline": "2024-12-31",
+      "is_completed": false,
+      "owner": 1
+    }
+  },
+  {
+    "model": "board.project",
+    "pk": 2,
+    "fields": {
+      "name": "Project 2",
+      "team": 2,
+      "description": "Sample project description 2.",
+      "deadline": "2024-12-31",
+      "is_completed": false,
+      "owner": 1
+    }
+  },
+  {
+    "model": "board.attachment",
+    "pk": 1,
+    "fields": {
+      "name": "Sample Attachment",
+      "file": "attachments/sample.txt"
+    }
+  },
+  {
+    "model": "board.task",
+    "pk": 1,
+    "fields": {
+      "name": "Implement login feature",
+      "board": 1,
+      "description": "Implement login functionality for the application",
+      "deadline": "2024-04-01",
+      "is_completed": false,
+      "priority": "High",
+      "task_type": 1,
+      "assignees": [1],
+      "attachments": []
+    }
+  },
+  {
+    "model": "board.task",
+    "pk": 2,
+    "fields": {
+      "name": "Fix critical bug",
+      "board": 1,
+      "description": "Fix critical bug causing application crash",
+      "deadline": "2024-03-30",
+      "is_completed": false,
+      "priority": "Urgent",
+      "task_type": 2,
+      "assignees": [2],
+      "attachments": []
+    }
+  },
+  {
+    "model": "board.task",
+    "pk": 3,
+    "fields": {
+      "name": "Implement user registration",
+      "board": 2,
+      "description": "Implement user registration functionality for the application",
+      "deadline": "2024-04-10",
+      "is_completed": false,
+      "priority": "High",
+      "task_type": 1,
+      "assignees": [1, 2],
+      "attachments": []
+    }
+  },
+  {
+    "model": "board.task",
+    "pk": 4,
+    "fields": {
+      "name": "Optimize database queries",
+      "board": 2,
+      "description": "Optimize database queries for better performance",
+      "deadline": "2024-04-15",
+      "is_completed": false,
+      "priority": "High",
+      "task_type": 1,
+      "assignees": [1],
+      "attachments": []
+    }
+  },
+  {
+    "model": "board.task",
+    "pk": 5,
+    "fields": {
+      "name": "Fix styling issues",
+      "board": 3,
+      "description": "Fix styling issues reported by the QA team",
+      "deadline": "2024-04-05",
+      "is_completed": false,
+      "priority": "High",
+      "task_type": 1,
+      "assignees": [2],
+      "attachments": []
+    }
+  },
+  {
+    "model": "board.task",
+    "pk": 6,
+    "fields": {
+      "name": "Investigate server downtime",
+      "board": 3,
+      "description": "Investigate server downtime reported by monitoring system",
+      "deadline": "2024-04-03",
+      "is_completed": false,
+      "priority": "Urgent",
+      "task_type": 2,
+      "assignees": [1],
+      "attachments": []
+    }
+  },
+  {
+    "model": "board.task",
+    "pk": 7,
+    "fields": {
+      "name": "Add new feature",
+      "board": 4,
+      "description": "Add a new feature as requested by the product owner",
+      "deadline": "2024-04-10",
+      "is_completed": false,
+      "priority": "High",
+      "task_type": 1,
+      "assignees": [1, 2],
+      "attachments": []
+    }
+  },
+  {
+    "model": "board.task",
+    "pk": 8,
+    "fields": {
+      "name": "Update documentation",
+      "board": 4,
+      "description": "Update project documentation to reflect recent changes",
+      "deadline": "2024-04-20",
+      "is_completed": false,
+      "priority": "High",
+      "task_type": 1,
+      "assignees": [2],
+      "attachments": []
+    }
+  },
+  {
+    "model": "board.team",
+    "pk": 3,
+    "fields": {
+      "name": "Development Team 3",
+      "members": [2]
+    }
+  },
+  {
+    "model": "board.board",
+    "pk": 5,
+    "fields": {
+      "name": "Main Board 5",
+      "project": 2,
+      "color": "#FFFFFF"
+    }
+  },
+  {
+    "model": "board.board",
+    "pk": 6,
+    "fields": {
+      "name": "Main Board 6",
+      "project": 2,
+      "color": "#FFFFFF"
+    }
+  },
+  {
+    "model": "board.board",
+    "pk": 7,
+    "fields": {
+      "name": "Main Board 7",
+      "project": 2,
+      "color": "#FFFFFF"
+    }
+  },
+  {
+    "model": "board.board",
+    "pk": 8,
+    "fields": {
+      "name": "Main Board 8",
+      "project": 2,
+      "color": "#FFFFFF"
+    }
+  },
+  {
+    "model": "board.project",
+    "pk": 3,
+    "fields": {
+      "name": "Project 3",
+      "team": 3,
+      "description": "Sample project description 3.",
+      "deadline": "2024-12-31",
+      "is_completed": false,
+      "owner": 1
+    }
+  },
+  {
+    "model": "board.project",
+    "pk": 4,
+    "fields": {
+      "name": "Project 4",
+      "team": 3,
+      "description": "Sample project description 4.",
+      "deadline": "2024-12-31",
+      "is_completed": false,
+      "owner": 1
+    }
+  },
+  {
+    "model": "board.project",
+    "pk": 5,
+    "fields": {
+      "name": "Project 5",
+      "team": 3,
+      "description": "Sample project description 5.",
+      "deadline": "2024-12-31",
+      "is_completed": false,
+      "owner": 1
+    }
+  }
+]
