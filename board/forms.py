@@ -77,11 +77,12 @@ class TaskForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        if kwargs:
-            if "initial" in kwargs:
-                self.fields["assignees"].queryset = Board.objects.get(
-                    id=kwargs["initial"]["board"]
-                ).project.team.members.all()
+        initial_board = kwargs.get("initial", {}).get("board", None)
+
+        if initial_board:
+            self.fields["assignees"].queryset = Board.objects.get(
+                id=kwargs["initial"]["board"]
+            ).project.team.members.all()
 
     file_field = MultipleFileField()
 
