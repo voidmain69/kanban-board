@@ -237,9 +237,17 @@ class TaskDeleteView(
 
     def test_func(self):
         self.object = self.get_object()
+        user = self.request.user
 
         return (
-            self.request.user in self.object.board.project.team.members.all()
+            user in self.object.board.project.team.members.all()
+            or user == self.object.board.project.owner
+        )
+
+    def get_success_url(self):
+        project = self.get_object().board.project
+        return reverse_lazy(
+            "board:project-detail", kwargs={"pk": project.id}
         )
 
     def handle_no_permission(self):
@@ -269,9 +277,8 @@ class TaskUpdateView(
         return reverse_lazy("board:project-detail", kwargs={"pk": projects_id})
 
     def test_func(self):
-        self.object = self.get_object()
         user = self.request.user
-
+        self.object = self.get_object()
         return (
             user in self.object.board.project.team.members.all()
             or user == self.object.board.project.owner

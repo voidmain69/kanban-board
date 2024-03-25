@@ -160,7 +160,8 @@
                           </svg>
                           Edit Task </a>
                         <div role="separator" class="dropdown-divider my-1"></div>
-                        <a class="dropdown-item d-flex align-items-center" href="{% url 'board:task-delete' task.id %}">
+
+                        <a class="delete-task-btn dropdown-item d-flex align-items-center" data-task-id="{{ task.id }}">
                           <svg class="dropdown-icon text-danger me-2" fill="currentColor" viewBox="0 0 20 20"
                                xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd"
@@ -186,7 +187,7 @@
                       {% endif %}
                     {% endfor %}
                   {% endif %}
-                <p class="card-text">{{ task.description|linebreaksbr|slice:":300" }}</p>
+                  <p class="card-text">{{ task.description|linebreaksbr|slice:":300" }}</p>
                   <div class="border-top">
                     <div class="mt-2">
                     <span
@@ -224,8 +225,8 @@
               </div>
             {% endfor %}
             <a type="button"
-                    class="btn btn-outline-gray-500 d-inline-flex align-items-center justify-content-center dashed-outline new-card w-100"
-                    href="{% url 'board:task-create' board.id %}">
+               class="btn btn-outline-gray-500 d-inline-flex align-items-center justify-content-center dashed-outline new-card w-100"
+               href="{% url 'board:task-create' board.id %}">
               <svg class="icon icon-xs me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                    xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -282,7 +283,7 @@
           <td>
             <div class="btn-group">
 
-            ...
+              ...
 
             </div>
           </td>
@@ -330,6 +331,26 @@
     </div>
   </div>
 
+  <!-- Modal -->
+  <div class="modal fade" id="deleteTaskModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">DELETE</h5>
+        </div>
+        <div class="modal-body">
+          Are you sure?
+        </div>
+        <div class="modal-footer">
+          <button id="cancelDeleteBtn" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button id="confirmDeleteBtn" type="button" class="btn btn-danger">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
   <script>
       function openImageModal(imageUrl, imageName) {
           $('#modalImage').attr('src', imageUrl);
@@ -338,6 +359,31 @@
       }
 
       $(document).ready(function () {
+
+          let taskIdToDelete;
+
+
+          $(".delete-task-btn").click(function () {
+              taskIdToDelete = $(this).data("task-id");
+              $('#deleteTaskModal').modal('show')
+          });
+
+          $("#cancelDeleteBtn").click(function () {
+              $('#deleteTaskModal').modal('hide')
+          });
+
+          $("#confirmDeleteBtn").click(function () {
+              $.ajax({
+                  type: "POST",
+                  url: "{% url 'board:task-delete' pk=0 %}".replace('0', taskIdToDelete),
+                  data: {
+                      csrfmiddlewaretoken: '{{ csrf_token }}'
+                  },
+                  success: function () {
+                      window.location.reload();
+                  }
+              });
+          });
 
           {% if error %}
               $('.toast').toast('show');
