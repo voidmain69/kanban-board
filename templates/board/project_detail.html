@@ -223,33 +223,17 @@
                 </div>
               </div>
             {% endfor %}
-            <button type="button"
+            <a type="button"
                     class="btn btn-outline-gray-500 d-inline-flex align-items-center justify-content-center dashed-outline new-card w-100"
-                    data-bs-toggle="modal" data-bs-target="#KanbanAddCard{{ board.id }}">
+                    href="{% url 'board:task-create' board.id %}">
               <svg class="icon icon-xs me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                    xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
               </svg>
               Add another card
-            </button>
+            </a>
           </div>
-          <div class="d-grid">
-            <div class="modal fade" id="KanbanAddCard{{ board.id }}" tabindex="-1" aria-labelledby="KanbanAddCardLabel4"
-                 aria-hidden="true">
-              <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content p-3">
-                  {{ board }}
-                  <form method="post" action="{% url 'board:task-create' board.id %}" novalidate>
-                    {% csrf_token %}
-                    {{ task_form|crispy }}
-                    <input class="btn" type="submit" value="Create"/>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-
         </div>
       {% endfor %}
     </div>
