@@ -8,7 +8,7 @@
 {% block content %}
   <div class="container-fluid px-3">
     <div class="row mt-4 mb-3">
-      <div class="col-6 d-flex justify-content-between ps-0">
+      <div class="col-9 d-flex justify-content-between ps-0">
         <div class="me-lg-3">
           {% if user.id == project.owner.id %}
             <a
@@ -54,7 +54,7 @@
           {% endif %}
         </div>
       </div>
-      <div class="col-6 px-0 text-end">
+      <div class="col-3 px-0 text-end">
         <div class="btn-group">
           <a
 
@@ -134,7 +134,9 @@
             {% for task in board.tasks.all %}
               <div class="card border-0 shadow p-4">
                 <div class="card-header d-flex align-items-center justify-content-between border-0 p-0 mb-3">
-                  <h3 class="h5 mb-0 {% if task.is_completed %}line-through{% endif %}">{{ task.name }}</h3>
+                  <h3 class="h5 mb-0 {% if task.is_completed %}line-through{% endif %}">
+                    <a data-toggle="modal" data-target="#taskModal" data-task-id="{{ task.id }}">{{ task.name }}</a>
+                  </h3>
                   <div>
                     <div class="dropdown">
                       <button type="button" class="btn btn-sm fs-6 px-1 py-0 dropdown-toggle" id="dropdownMenuLink"
@@ -149,9 +151,10 @@
                         </svg>
                       </button>
                       <div class="dropdown-menu dashboard-dropdown dropdown-menu-start mt-2 py-1">
-                        <a
-                            class="dropdown-item d-flex align-items-center"
-                            href="{% url 'board:task-update' task.id %}"
+                        <a data-toggle="modal" data-target="#taskModal"
+                           data-task-id="{{ task.id }}"
+                           class="dropdown-item d-flex align-items-center"
+                           href="{% url 'board:task-update' task.id %}"
                         >
                           <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20"
                                xmlns="http://www.w3.org/2000/svg">
@@ -197,7 +200,11 @@
                     <div class="mt-2">
                       Deadline: {{ task.deadline }}
                     </div>
-                    <h5 class="fs-6 fw-normal mt-4">{{ task.assignees.count }} Assignees</h5>
+                    <h5 class="fs-6 fw-normal mt-4">
+                      <a href="{% url 'board:team-update' pk=project.team.id %}">
+                        {{ task.assignees.count }} Assignees
+                      </a>
+                    </h5>
                     <div class="avatar-group">
                       {% for worker in task.assignees.all %}
                         <a href="#"
@@ -350,6 +357,7 @@
     </div>
   </div>
 
+  {% include 'board/modal/task_detail.html' %}
 
   <script>
       function openImageModal(imageUrl, imageName) {

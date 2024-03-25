@@ -49,7 +49,7 @@
             </div>
             <div class="col-11 col-lg-8 px-0 mb-4 mb-md-0">
               <div class="mb-2">
-                <a href="#" data-toggle="modal" data-target="#myModal" data-task-id="{{ task.id }}">
+                <a href="#" data-toggle="modal" data-target="#taskModal" data-task-id="{{ task.id }}">
                   <h3 class="h5 {% if task.is_completed %}line-through{% endif %}">{{ task.name }}</h3>
                 </a>
                 <div class="d-block d-sm-flex">
@@ -119,41 +119,5 @@
       {% include 'includes/pagination.html' %}
     </div>
   {% endfor %}
-  <script>
-      $(document).ready(function () {
-          $("a[data-target='#myModal']").click(function () {
-              var taskId = $(this).data("task-id");
-              $.get("/tasks/" + taskId + "/", function (data) {
-                  $("#modalContent").html(data);
-                  $("#myModal").modal("show");
-              });
-          });
-      });
-
-  </script>
-  <div
-      class="modal fade"
-      data-bs-backdrop="static"
-      id="myModal"
-      tabindex="-1"
-      aria-labelledby="myModalLabel"
-      aria-hidden="true"
-  >
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="staticBackdropLabel">Task detail</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body" id="modalContent">
-          <!-- AJAX -->
-        </div>
-        <div class="modal-footer">
-          <a href="#" class="btn btn-primary">Edit</a>
-          <a href="#" class="btn btn-danger">Delete</a>
-          <a href="#" class="btn btn-secondary">Back to Task List</a>
-        </div>
-      </div>
-    </div>
-  </div>
+ {% include 'board/modal/task_detail.html' %}
 {% endblock %}
