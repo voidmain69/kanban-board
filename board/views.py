@@ -270,9 +270,11 @@ class TaskUpdateView(
 
     def test_func(self):
         self.object = self.get_object()
+        user = self.request.user
 
         return (
-            self.request.user in self.object.board.project.team.members.all()
+            user in self.object.board.project.team.members.all()
+            or user == self.object.board.project.owner
         )
 
     def handle_no_permission(self):
