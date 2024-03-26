@@ -15,6 +15,7 @@ from board.forms import (
     WorkerSearchForm,
     TeamForm,
     WorkerForm,
+    TaskChangeBoardForm
 )
 from board.models import Project, Board, Task, Team
 
@@ -325,18 +326,6 @@ class TaskDeleteView(
         messages.error(self.request, error_message)
         return super().handle_no_permission()
 
-        error_message = (
-            f"You are not allowed to delete this task. "
-            f"Only the team members of the project can "
-            f"delete it."
-        )
-        self.request.session["error"] = error_message
-        return redirect(
-            reverse(
-                "board:project-detail",
-                kwargs={"pk": self.get_object().board.project.id},
-            )
-        )
 
 class TaskUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
     model = Task
