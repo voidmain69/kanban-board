@@ -77,19 +77,14 @@ class TaskForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        if kwargs:
-            if "initial" in kwargs:
-                self.fields["assignees"].queryset = Board.objects.get(
-                    id=kwargs["initial"]["board"]
-                ).project.team.members.all()
+        initial_board = kwargs.get("initial", {}).get("board", None)
+
+        if initial_board:
+            self.fields["assignees"].queryset = Board.objects.get(
+                id=kwargs["initial"]["board"]
+            ).project.team.members.all()
 
     file_field = MultipleFileField()
-
-    # assignees = forms.ModelMultipleChoiceField(
-    #     queryset=get_user_model().objects.all(),
-    #     widget=forms.CheckboxSelectMultiple,
-    #     required=False
-    # )
 
     class Meta:
         model = Task
@@ -122,11 +117,29 @@ class TaskForm(forms.ModelForm):
                     task.attachments.add(attachment)
                 self.save_m2m()
             except Exception as e:
-                # Если произошла ошибка, удаляем все вложения, чтобы избежать неконтролируемого размножения
                 for attachment in task.attachments.all():
                     attachment.file.delete()
                 raise e
         return task
+
+
+class TaskChangeBoardForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        initial_board = kwargs.get("initial", {}).get("project", None)
+
+        if initial_board:
+            self.fields["board"].queryset = Project.objects.get(
+                id=kwargs["initial"]["project"]
+            ).boards.all()
+
+    class Meta:
+        model = Task
+        fields = [
+            "board",
+        ]
 
 
 class TeamForm(forms.ModelForm):
