@@ -1,0 +1,41 @@
+<div
+    class="modal fade"
+    data-bs-backdrop="static"
+    id="taskModal"
+    tabindex="-1"
+    aria-labelledby="taskModalLabel"
+    aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Task detail</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="modalContent">
+        <!-- AJAX -->
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-primary">Edit</a>
+        <a href="#" class="btn btn-danger">Delete</a>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    $(document).ready(function () {
+
+        $("[data-target='#taskModal']").click(function () {
+            let taskId = $(this).data("task-id");
+            $.ajax({
+                type: "GET",
+                url: "{% url 'board:task-detail' pk=0 %}".replace('0', taskId),
+                success: function (data) {
+                    $("#modalContent").html(data);
+                    $("#taskModal").modal("show");
+                }
+            });
+        });
+    });
+
+</script>
