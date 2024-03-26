@@ -20,15 +20,17 @@
         </ol>
       </nav>
       <h2 class="h4">Projects List</h2>
-      <p class="mb-0">Your web analytics dashboard template.</p></div>
+      <p class="mb-0">Kanban Project Catalog: Organize, Prioritize, Deliver.</p></div>
     <div class="btn-toolbar mb-2 mb-md-0">
-      <a class="btn btn-sm btn-gray-800 d-inline-flex align-items-center" href="#" data-toggle="modal"
-         data-target="#myModal">
+      <button type="button" class="btn btn-sm btn-gray-800 d-inline-flex align-items-center" data-bs-toggle="modal"
+              data-bs-target="#projectModal"
+              data-action="create">
         <svg class="icon icon-xs me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
              xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
         </svg>
-        New Project</a>
+        New Project
+      </button>
     </div>
   </div>
   <div class="table-settings mb-4">
@@ -94,14 +96,21 @@
           {% else %}
             <span>---</span>
           {% endif %}</td>
-          <td><span class="fw-normal text-success">{% if project.is_completed %}In work{% else %}Active{% endif %}</span></td>
+          <td><span class="fw-normal text-success">{% if project.is_completed %}In work{% else %}
+            Active{% endif %}</span></td>
           <td>
             <div class="btn-group">
+              <!-- Button to trigger modal for updating -->
+              <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#projectModal"
+                      data-action="update" data-id="{{ project.id }}">
+                Update
+              </button>
+              <!-- Button to trigger modal for creating -->
+              <button type="button" class="btn btn-primary"
+                      data-action="delete" data-id="{{ project.id }}">
+                Delete
+              </button>
 
-              <form action="{% url 'board:project-delete' project.id %}" method="post" novalidate>
-                {% csrf_token %}
-                <input type="submit" value="Delete" class="btn btn-primary">
-              </form>
 
             </div>
           </td>
@@ -116,29 +125,62 @@
     </div>
   </div>
 
+  {% include 'board/modal/modal.html' with modal_content=messages %}
+
   <script>
       $(document).ready(function () {
-          $("a[data-target='#myModal']").click(function () {
-              $.get("{% url 'board:project-create' %}", function (data) {
-                  $("#modalContent").html(data);
-                  $("#myModal").modal("show");
+
+          {% if messages %}
+              $('#myModal').modal('show');
+          {% endif %}
+
+          $('[data-action="create"]').click(function () {
+              $.ajax({
+                  url: "{% url 'board:project-create' %}",
+                  success: function (response) {
+                      $('#projectModalContent').html(response);
+                      $("#projectModal").modal("show");
+                  }
               });
           });
 
-          {% if error %}
-              $('.toast').toast('show');
-          {% endif %}
-
-          $('.toast .close').click(function () {
-              $('.toast').toast('hide');
+          $('[data-action="update"]').click(function () {
+              let id = $(this).data('id');
+              $.ajax({
+                  url: "{% url 'board:project-update' pk=0 %}".replace('0', id),
+                  success: function (response) {
+                      $('#projectModalContent').html(response);
+                      $("#projectModal").modal("show");
+                  }
+              });
           });
+
+          $('[data-action="delete"]').click(function () {
+              let id = $(this).data('id');
+              $.ajax({
+                  type: "POST",
+                  url: "{% url 'board:project-delete' pk=0 %}".replace('0', id),
+                  data: {
+                      csrfmiddlewaretoken: '{{ csrf_token }}'
+                  },
+                  success: function () {
+                      location.reload();
+                      console.log("success");
+                  },
+                  error: function (xhr, status, error) {
+                      location.reload();
+                      console.log("Error occurred while performing the request:", error);
+                  }
+              });
+          });
+
       });
 
   </script>
   <div
       class="modal fade"
       data-bs-backdrop="static"
-      id="myModal"
+      id="projectModal"
       tabindex="-1"
       aria-labelledby="myModalLabel"
       aria-hidden="true"
@@ -149,25 +191,9 @@
           <h5 class="modal-title" id="staticBackdropLabel">Project</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body" id="modalContent">
+        <div class="modal-body" id="projectModalContent">
           <!-- AJAX -->
         </div>
-      </div>
-    </div>
-  </div>
-
-      <!-- Flexbox container for aligning the toasts -->
-  <div aria-live="polite" aria-atomic="true"
-       class="toast-container position-absolute p-3 top-0 start-50 translate-middle-x">
-
-    <!-- Then put toasts within -->
-    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-      <div class="toast-header">
-        <strong class="me-auto ml-10 text-danger">Error</strong>
-        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-      </div>
-      <div class="toast-body">
-        {{ error }}
       </div>
     </div>
   </div>
