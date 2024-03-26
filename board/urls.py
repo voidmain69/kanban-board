@@ -12,6 +12,7 @@ from .views import (
     TaskDetailView,
     TaskUpdateView,
     TaskDeleteView,
+    TaskChangeBoardView,
     BoardCreateView,
     BoardDeleteView,
     WorkerCreateView,
@@ -58,6 +59,11 @@ urlpatterns = [
         "tasks/create/<int:board_id>/",
         TaskCreateView.as_view(),
         name="task-create",
+    ),
+    path(
+        "tasks/change-board/<int:pk>/",
+        TaskChangeBoardView.as_view(),
+        name="task-change-board",
     ),
     path(
         "boards/create/<int:project_id>/",
