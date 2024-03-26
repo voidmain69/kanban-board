@@ -119,7 +119,6 @@ class TaskCreateView(LoginRequiredMixin, UserPassesTestMixin,
                      generic.CreateView):
     model = Task
     form_class = TaskForm
-    success_url = reverse_lazy("board:project-list")
 
     def form_valid(self, form):
         board = get_object_or_404(Board, pk=self.kwargs["board_id"])
