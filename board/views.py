@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy, reverse
@@ -15,7 +15,7 @@ from board.forms import (
     WorkerSearchForm,
     TeamForm,
     WorkerForm,
-    TaskChangeBoardForm
+    TaskChangeBoardForm,
 )
 from board.models import Project, Board, Task, Team
 
@@ -61,7 +61,7 @@ class ProjectListView(LoginRequiredMixin, generic.ListView):
         return context
 
     def get_queryset(self):
-        queryset = Project.objects.all()
+        queryset = Project.objects.order_by("-pk")
         form = ProjectSearchForm(self.request.GET)
         if form.is_valid():
             return queryset.filter(name__icontains=form.cleaned_data["name"])
@@ -71,7 +71,6 @@ class ProjectListView(LoginRequiredMixin, generic.ListView):
 class ProjectCreateView(LoginRequiredMixin, generic.CreateView):
     model = Project
     form_class = ProjectCreationForm
-    success_url = reverse_lazy("board:project-list")
 
     def form_valid(self, form):
         project = form.save(commit=False)
@@ -81,31 +80,41 @@ class ProjectCreateView(LoginRequiredMixin, generic.CreateView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        return self.render_to_response(self.get_context_data(
-            form=form, has_errors=True
-        ),status=202)
+        return self.render_to_response(
+            self.get_context_data(form=form, has_errors=True), status=202
+        )
+
+    def get_success_url(self):
+        return reverse_lazy(
+            "board:project-detail",
+            kwargs={"pk": self.object.id}
+        )
 
 
-class ProjectUpdateView(LoginRequiredMixin, UserPassesTestMixin,
-                        generic.UpdateView):
+class ProjectUpdateView(
+    LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView
+):
     model = Project
     fields = "__all__"
     success_url = reverse_lazy("board:project-list")
+
+    error_message = (
+        "You are not allowed to edit this project. "
+        "Only the owner of the project can delete it."
+    )
 
     def test_func(self):
         project = self.get_object()
         return project.owner == self.request.user
 
     def handle_no_permission(self):
-        error_message = ("You are not allowed to edit this project. "
-                         "Only the owner of the project can delete it.")
-        messages.error(self.request, error_message)
+        messages.error(self.request, self.error_message)
         return super().handle_no_permission()
 
     def form_invalid(self, form):
-        return self.render_to_response(self.get_context_data(
-            form=form, has_errors=True
-        ),status=202)
+        return self.render_to_response(
+            self.get_context_data(form=form, has_errors=True), status=202
+        )
 
 
 class ProjectDeleteView(
@@ -115,14 +124,17 @@ class ProjectDeleteView(
     model = Project
     success_url = reverse_lazy("board:project-list")
 
+    error_message = (
+        "You are not allowed to delete this project. "
+        "Only the owner of the project can delete it."
+    )
+
     def test_func(self):
         project = self.get_object()
         return project.owner == self.request.user
 
     def handle_no_permission(self):
-        error_message = ("You are not allowed to delete this project. "
-                         "Only the owner of the project can delete it.")
-        messages.error(self.request, error_message)
+        messages.error(self.request, self.error_message)
         return super().handle_no_permission()
 
 
@@ -136,11 +148,17 @@ class ProjectDetailView(LoginRequiredMixin, generic.DetailView):
         return context
 
 
-class TaskCreateView(LoginRequiredMixin, UserPassesTestMixin,
-                     generic.CreateView):
+class TaskCreateView(
+    LoginRequiredMixin, UserPassesTestMixin, generic.CreateView
+):
     model = Task
     form_class = TaskForm
 
+    error_message = (
+        "You are not allowed to edit this project. "
+        "Only the team members of the project can "
+        "edit it."
+    )
 
     def form_valid(self, form):
         board = get_object_or_404(Board, pk=self.kwargs["board_id"])
@@ -167,12 +185,7 @@ class TaskCreateView(LoginRequiredMixin, UserPassesTestMixin,
         )
 
     def handle_no_permission(self):
-        error_message = (
-            f"You are not allowed to edit this project. "
-            f"Only the team members of the project can "
-            f"edit it."
-        )
-        messages.add_message(self.request, messages.ERROR, error_message)
+        messages.add_message(self.request, messages.ERROR, self.error_message)
         return redirect(
             reverse(
                 "board:project-detail",
@@ -181,10 +194,17 @@ class TaskCreateView(LoginRequiredMixin, UserPassesTestMixin,
         )
 
 
-class BoardCreateView(LoginRequiredMixin, UserPassesTestMixin,
-                      generic.CreateView):
+class BoardCreateView(
+    LoginRequiredMixin, UserPassesTestMixin, generic.CreateView
+):
     model = Board
     form_class = BoardCreationForm
+
+    error_message = (
+        "You are not allowed to edit this project. "
+        "Only the team members of the project can "
+        "edit it."
+    )
 
     def form_valid(self, form):
         form.instance.project_id = self.kwargs["project_id"]
@@ -198,18 +218,10 @@ class BoardCreateView(LoginRequiredMixin, UserPassesTestMixin,
     def test_func(self):
         user = self.request.user
         project = get_object_or_404(Project, pk=self.kwargs["project_id"])
-        return (
-            user in project.team.members.all()
-            or user == project.owner
-        )
+        return user in project.team.members.all() or user == project.owner
 
     def handle_no_permission(self):
-        error_message = (
-            f"You are not allowed to edit this project. "
-            f"Only the team members of the project can "
-            f"edit it."
-        )
-        messages.add_message(self.request, messages.ERROR, error_message)
+        messages.add_message(self.request, messages.ERROR, self.error_message)
         return redirect(
             reverse(
                 "board:project-detail",
@@ -218,8 +230,9 @@ class BoardCreateView(LoginRequiredMixin, UserPassesTestMixin,
         )
 
 
-class BoardDeleteView(LoginRequiredMixin, UserPassesTestMixin,
-                      generic.DeleteView):
+class BoardDeleteView(
+    LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView
+):
     model = Board
 
     def get_success_url(self):
@@ -233,9 +246,9 @@ class BoardDeleteView(LoginRequiredMixin, UserPassesTestMixin,
 
     def handle_no_permission(self):
         error_message = (
-            f"You are not allowed to delete this board. "
-            f"Only the owner of the project can "
-            f"delete it."
+            "You are not allowed to delete this board. "
+            "Only the owner of the project can "
+            "delete it."
         )
         messages.add_message(self.request, messages.ERROR, error_message)
         return redirect(
@@ -331,43 +344,59 @@ class TaskDeleteView(
 ):
     model = Task
 
+    error_message = (
+        "You are not allowed to delete this task. "
+        "Only the team members of the project can delete it."
+    )
+
     def test_func(self):
         user = self.request.user
         task = self.get_object()
-        return (user in task.board.project.team.members.all() or
-                user == task.board.project.owner)
+        return (
+            user in task.board.project.team.members.all()
+            or user == task.board.project.owner
+        )
 
     def get_success_url(self):
         project_id = self.object.board.project.id
         return reverse_lazy("board:project-detail", kwargs={"pk": project_id})
 
     def handle_no_permission(self):
-        error_message = ("You are not allowed to delete this task. "
-                         "Only the team members of the project can delete it.")
-        messages.error(self.request, error_message)
+        messages.error(self.request, self.error_message)
         return super().handle_no_permission()
 
 
-class TaskUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
+class TaskUpdateView(
+    LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView
+):
     model = Task
     form_class = TaskForm
+
+    error_message = (
+        "You are not allowed to edit this task. "
+        "Only the team members of the project can edit it."
+    )
 
     def test_func(self):
         user = self.request.user
         task = self.get_object()
-        return (user in task.board.project.team.members.all() or
-                user == task.board.project.owner)
+        return (
+            user in task.board.project.team.members.all()
+            or user == task.board.project.owner
+        )
 
     def get_success_url(self):
         project_id = self.object.board.project.id
         return reverse_lazy("board:project-detail", kwargs={"pk": project_id})
 
     def handle_no_permission(self):
-        error_message = ("You are not allowed to edit this task. "
-                         "Only the team members of the project can edit it.")
-        messages.error(self.request, error_message)
-        return redirect(reverse("board:project-detail",
-                        kwargs={"pk": self.get_object().board.project.id}))
+        messages.error(self.request, self.error_message)
+        return redirect(
+            reverse(
+                "board:project-detail",
+                kwargs={"pk": self.get_object().board.project.id},
+            )
+        )
 
     def get_initial(self):
         initial = super().get_initial()
@@ -378,29 +407,36 @@ class TaskUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView
 
 
 class TaskChangeBoardView(
-    LoginRequiredMixin,
-    UserPassesTestMixin,
-    generic.UpdateView
+    LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView
 ):
     model = Task
     form_class = TaskChangeBoardForm
 
+    error_message = (
+        "You are not allowed to edit this task. "
+        "Only the team members of the project can edit it."
+    )
+
     def test_func(self):
         user = self.request.user
         task = self.get_object()
-        return (user in task.board.project.team.members.all() or
-                user == task.board.project.owner)
+        return (
+            user in task.board.project.team.members.all()
+            or user == task.board.project.owner
+        )
 
     def get_success_url(self):
         project_id = self.object.board.project.id
         return reverse_lazy("board:project-detail", kwargs={"pk": project_id})
 
     def handle_no_permission(self):
-        error_message = ("You are not allowed to edit this task. "
-                         "Only the team members of the project can edit it.")
-        messages.error(self.request, error_message)
-        return redirect(reverse("board:project-detail",
-                        kwargs={"pk": self.get_object().board.project.id}))
+        messages.error(self.request, self.error_message)
+        return redirect(
+            reverse(
+                "board:project-detail",
+                kwargs={"pk": self.get_object().board.project.id},
+            )
+        )
 
     def get_initial(self):
         initial = super().get_initial()

@@ -43,6 +43,7 @@
                       if (jqXHR.status === 200) {
                           console.log('Запрос выполнен успешно');
                           $("#projectModal").modal("hide");
+
                       } else {
                           console.log('Произошла ошибка:', jqXHR.status);
                           $('#projectModalContent').html(response);
