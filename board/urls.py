@@ -13,6 +13,11 @@ from .views import (
     TaskUpdateView,
     TaskDeleteView,
     TaskChangeBoardView,
+    TaskTypeList,
+    TaskTypeCreateViev,
+    TaskTypeUpdateViev,
+    TaskTypeDetailView,
+    TaskTypeDeleteView,
     BoardCreateView,
     BoardDeleteView,
     WorkerCreateView,
@@ -92,6 +97,20 @@ urlpatterns = [
         toggle_assign_to_team,
         name="toggle-assign-to-team",
     ),
+    path("taskstypes/create/", TaskTypeCreateViev.as_view(),
+         name="tasktype-create"),
+    path(
+        "taskstypes/<int:pk>/", TaskTypeDetailView.as_view(), name="tasktype-detail"
+    ),
+    path(
+        "taskstypes/<int:pk>/delete/", TaskTypeDeleteView.as_view(),
+        name="tasktype-delete"
+    ),
+    path(
+        "taskstypes/<int:pk>/update/", TaskTypeUpdateViev.as_view(),
+        name="tasktype-update"
+    ),
+
 ]
 
 app_name = "board"
