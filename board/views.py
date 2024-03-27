@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy, reverse
@@ -80,11 +80,32 @@ class ProjectCreateView(LoginRequiredMixin, generic.CreateView):
         project.save()
         return super().form_valid(form)
 
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(
+            form=form, has_errors=True
+        ),status=202)
 
-class ProjectUpdateView(LoginRequiredMixin, generic.UpdateView):
+
+class ProjectUpdateView(LoginRequiredMixin, UserPassesTestMixin,
+                        generic.UpdateView):
     model = Project
     fields = "__all__"
     success_url = reverse_lazy("board:project-list")
+
+    def test_func(self):
+        project = self.get_object()
+        return project.owner == self.request.user
+
+    def handle_no_permission(self):
+        error_message = ("You are not allowed to edit this project. "
+                         "Only the owner of the project can delete it.")
+        messages.error(self.request, error_message)
+        return super().handle_no_permission()
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(
+            form=form, has_errors=True
+        ),status=202)
 
 
 class ProjectDeleteView(
@@ -120,6 +141,7 @@ class TaskCreateView(LoginRequiredMixin, UserPassesTestMixin,
     model = Task
     form_class = TaskForm
 
+
     def form_valid(self, form):
         board = get_object_or_404(Board, pk=self.kwargs["board_id"])
         form.instance.board = board
@@ -138,10 +160,10 @@ class TaskCreateView(LoginRequiredMixin, UserPassesTestMixin,
 
     def test_func(self):
         user = self.request.user
-        board = get_object_or_404(Board, pk=self.kwargs["board_id"])
+        self.board = get_object_or_404(Board, pk=self.kwargs["board_id"])
         return (
-            user in board.project.team.members.all()
-            or user == board.project.owner
+            user in self.board.project.team.members.all()
+            or user == self.board.project.owner
         )
 
     def handle_no_permission(self):

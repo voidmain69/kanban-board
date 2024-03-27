@@ -101,7 +101,7 @@
           <td>
             <div class="btn-group">
               <!-- Button to trigger modal for updating -->
-              <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#projectModal"
+              <button type="button" class="btn btn-secondary"
                       data-action="update" data-id="{{ project.id }}">
                 Update
               </button>
@@ -139,20 +139,44 @@
                   url: "{% url 'board:project-create' %}",
                   success: function (response) {
                       $('#projectModalContent').html(response);
-                      $("#projectModal").modal("show");
+                      // $("#projectModal").modal("show"); // Не показываем модальное окно здесь
+                  },
+                  error: function (xhr, errmsg, err) {
+                      // Обработка ошибки
+                      alert('Ошибка: ' + xhr.status + ': ' + xhr.responseText); // Вывод сообщения об ошибке
                   }
               });
           });
+
+          $('#projectForm').submit(function (event) {
+              console.log("Обработчик submit сработал!"); // Отладочное сообщение
+              event.preventDefault(); // Предотвращаем стандартное действие отправки формы
+
+              // Другой код обработчика события submit
+          });
+
 
           $('[data-action="update"]').click(function () {
               let id = $(this).data('id');
               $.ajax({
                   url: "{% url 'board:project-update' pk=0 %}".replace('0', id),
-                  success: function (response) {
-                      $('#projectModalContent').html(response);
-                      $("#projectModal").modal("show");
-                  }
-              });
+                  success: function (response, textStatus, jqXHR) {
+
+
+                      if (jqXHR.status === 200) {
+                          $('#projectModalContent').html(response);
+                          $("#projectModal").modal("show");
+                      } else {
+                          console.log('Forbidden:', jqXHR.status);
+                      }
+
+                  },
+                  error: function (xhr, status, error) {
+                      location.reload();
+                      console.log("Error occurred while performing the request:", error);
+                  },
+              })
+
           });
 
           $('[data-action="delete"]').click(function () {
@@ -163,7 +187,7 @@
                   data: {
                       csrfmiddlewaretoken: '{{ csrf_token }}'
                   },
-                  success: function () {
+                  success: function (response, textStatus, jqXHR) {
                       location.reload();
                       console.log("success");
                   },

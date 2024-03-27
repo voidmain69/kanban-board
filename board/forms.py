@@ -1,4 +1,5 @@
 from datetime import datetime
+from django.utils import timezone
 
 from django import forms
 from django.contrib.auth import get_user_model
@@ -23,6 +24,10 @@ class MultipleFileField(forms.FileField):
         else:
             result = single_file_clean(data, initial)
         return result
+
+
+def is_deadline_valid(deadline):
+    return deadline and deadline > timezone.now().date()
 
 
 class ProjectSearchForm(forms.Form):
@@ -60,6 +65,12 @@ class ProjectCreationForm(forms.ModelForm):
         widgets = {
             "deadline": forms.DateInput(attrs={"type": "date"}),
         }
+
+    def clean_deadline(self):
+        deadline = self.cleaned_data.get('deadline')
+        if not is_deadline_valid(deadline):
+            raise forms.ValidationError("Deadline must be after the current date.")
+        return deadline
 
 
 class BoardCreationForm(forms.ModelForm):
@@ -101,6 +112,12 @@ class TaskForm(forms.ModelForm):
             "name": forms.TextInput(attrs={"placeholder": "Enter task name"}),
             "deadline": forms.DateInput(attrs={"type": "date"}),
         }
+
+    def clean_deadline(self):
+        deadline = self.cleaned_data.get('deadline')
+        if not is_deadline_valid(deadline):
+            raise forms.ValidationError("Deadline must be after the current date.")
+        return deadline
 
     def save(self, commit=True):
         task = super().save(commit=False)

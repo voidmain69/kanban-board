@@ -7,14 +7,14 @@
   </div>
   <div class="card border-0">
     <div class="card-body">
-      {% if object %}
-        <form action="{% url 'board:project-update' object.id %}" method="post" novalidate>
+      {% if not object %}
+        <form id="projectForm" data-action="{% url 'board:project-create' %}" method="post" novalidate>
           {% csrf_token %}
           {{ form|crispy }}
           <input type="submit" value="Submit" class="btn btn-primary">
         </form>
       {% else %}
-        <form action="{% url 'board:project-create' %}" method="post" novalidate>
+        <form id="projectForm" method="post" data-action="{% url 'board:project-update' pk=object.id %}" novalidate>
           {% csrf_token %}
           {{ form|crispy }}
           <input type="submit" value="Submit" class="btn btn-primary">
@@ -23,3 +23,37 @@
       {% endif %}
     </div>
   </div>
+
+  <script>
+      $(document).ready(function () {
+
+
+          $('#projectForm').submit(function (event) {
+              event.preventDefault();
+
+              let formData = $(this).serialize();
+              let actionUrl = $(this).attr('data-action');
+
+              $.ajax({
+                  type: 'POST',
+                  url: actionUrl,
+                  data: formData,
+                  success: function (response, textStatus, jqXHR) {
+
+                      if (jqXHR.status === 200) {
+                          console.log('Запрос выполнен успешно');
+                          $("#projectModal").modal("hide");
+                      } else {
+                          console.log('Произошла ошибка:', jqXHR.status);
+                          $('#projectModalContent').html(response);
+                      }
+
+
+                  },
+                  error: function (xhr, errmsg, err) {
+                      alert('Error: ' + xhr.status + ': ' + xhr.responseText);
+                  }
+              });
+          });
+      });
+  </script>
