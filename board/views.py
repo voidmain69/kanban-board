@@ -15,9 +15,9 @@ from board.forms import (
     WorkerSearchForm,
     TeamForm,
     WorkerForm,
-    TaskChangeBoardForm,
+    TaskChangeBoardForm, TaskTypeForm,
 )
-from board.models import Project, Board, Task, Team
+from board.models import Project, Board, Task, Team, TaskType
 
 
 @login_required
@@ -459,3 +459,32 @@ class TeamUpdateView(LoginRequiredMixin, generic.UpdateView):
     def get_success_url(self):
         projects_id = self.object.project_set.first().pk
         return reverse_lazy("board:project-detail", kwargs={"pk": projects_id})
+
+
+class TaskTypeCreateView(LoginRequiredMixin, generic.CreateView):
+    model = TaskType
+    fields = ["name"]
+    success_url = reverse_lazy("board:task-type-list")
+
+
+class TaskTypeDetailView(LoginRequiredMixin, generic.DetailView):
+    model = TaskType
+
+
+class TaskTypeUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = TaskType
+    form_class = TaskTypeForm
+
+    def get_success_url(self):
+        return reverse_lazy("board:task-type-detail", kwargs={"pk": self.object})
+
+
+class TaskTypeDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = TaskType
+    success_url = reverse_lazy('board:task-type-list')
+
+
+class TaskTypeListView(LoginRequiredMixin, generic.ListView):
+    model = TaskType
+    paginate_by = 10
+

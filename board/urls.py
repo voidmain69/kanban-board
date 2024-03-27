@@ -13,9 +13,9 @@ from .views import (
     TaskUpdateView,
     TaskDeleteView,
     TaskChangeBoardView,
-    TaskTypeList,
-    TaskTypeCreateViev,
-    TaskTypeUpdateViev,
+    TaskTypeListView,
+    TaskTypeCreateView,
+    TaskTypeUpdateView,
     TaskTypeDetailView,
     TaskTypeDeleteView,
     BoardCreateView,
@@ -97,18 +97,20 @@ urlpatterns = [
         toggle_assign_to_team,
         name="toggle-assign-to-team",
     ),
-    path("taskstypes/create/", TaskTypeCreateViev.as_view(),
-         name="tasktype-create"),
+    path("taskstypes/create/", TaskTypeCreateView.as_view(),
+         name="task-type-create"),
+    path("taskstypes/", TaskTypeListView.as_view(),
+         name="task-type-list"),
     path(
-        "taskstypes/<int:pk>/", TaskTypeDetailView.as_view(), name="tasktype-detail"
+        "taskstypes/<int:pk>/", TaskTypeDetailView.as_view(), name="task-type-detail"
     ),
     path(
         "taskstypes/<int:pk>/delete/", TaskTypeDeleteView.as_view(),
-        name="tasktype-delete"
+        name="task-type-delete"
     ),
     path(
-        "taskstypes/<int:pk>/update/", TaskTypeUpdateViev.as_view(),
-        name="tasktype-update"
+        "taskstypes/<int:pk>/update/", TaskTypeUpdateView.as_view(),
+        name="task-type-update"
     ),
 
 ]

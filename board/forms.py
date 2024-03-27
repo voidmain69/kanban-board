@@ -5,7 +5,7 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import Task, Attachment, Project, Board, Team, Worker
+from .models import Task, Attachment, Project, Board, Team, Worker, TaskType
 
 
 class MultipleFileInput(forms.ClearableFileInput):
@@ -167,6 +167,13 @@ class TeamForm(forms.ModelForm):
 
     class Meta:
         model = Team
+        fields = "__all__"
+
+
+class TaskTypeForm(forms.ModelForm):
+
+    class Meta:
+        model = TaskType
         fields = "__all__"
 
 
