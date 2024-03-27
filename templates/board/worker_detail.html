@@ -19,7 +19,9 @@
       <div class="card mb-3" style="max-width: 540px;">
         <div class="row g-0">
           <div class="col-md-4">
+            {% if worker.avatar %}
             <img src="{{ worker.avatar.url }}" class="img-fluid rounded m-2 mt-4" alt="user-avatar">
+            {% endif %}
           </div>
           <div class="col-md-8">
             <div class="card-body">
