@@ -26,6 +26,11 @@ from .views import (
     TeamCreateView,
     TeamUpdateView,
     toggle_assign_to_team,
+    PositionCreateView,
+    PositionListView,
+    PositionDetailView,
+    PositionDeleteView,
+    PositionUpdateView,
 )
 
 urlpatterns = [
@@ -97,22 +102,48 @@ urlpatterns = [
         toggle_assign_to_team,
         name="toggle-assign-to-team",
     ),
-    path("taskstypes/create/", TaskTypeCreateView.as_view(),
-         name="task-type-create"),
-    path("taskstypes/", TaskTypeListView.as_view(),
-         name="task-type-list"),
     path(
-        "taskstypes/<int:pk>/", TaskTypeDetailView.as_view(), name="task-type-detail"
+        "taskstypes/create/",
+        TaskTypeCreateView.as_view(),
+        name="task-type-create",
+    ),
+    path("taskstypes/", TaskTypeListView.as_view(), name="task-type-list"),
+    path(
+        "taskstypes/<int:pk>/",
+        TaskTypeDetailView.as_view(),
+        name="task-type-detail",
     ),
     path(
-        "taskstypes/<int:pk>/delete/", TaskTypeDeleteView.as_view(),
-        name="task-type-delete"
+        "taskstypes/<int:pk>/delete/",
+        TaskTypeDeleteView.as_view(),
+        name="task-type-delete",
     ),
     path(
-        "taskstypes/<int:pk>/update/", TaskTypeUpdateView.as_view(),
-        name="task-type-update"
+        "taskstypes/<int:pk>/update/",
+        TaskTypeUpdateView.as_view(),
+        name="task-type-update",
     ),
-
+    path(
+        "positions/create/",
+        PositionCreateView.as_view(),
+        name="position-create",
+    ),
+    path("positions/", PositionListView.as_view(), name="position-list"),
+    path(
+        "positions/<int:pk>/",
+        PositionDetailView.as_view(),
+        name="position-detail",
+    ),
+    path(
+        "positions/<int:pk>/delete/",
+        PositionDeleteView.as_view(),
+        name="position-delete",
+    ),
+    path(
+        "positions/<int:pk>/update/",
+        PositionUpdateView.as_view(),
+        name="position-update",
+    ),
 ]
 
 app_name = "board"

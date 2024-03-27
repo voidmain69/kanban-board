@@ -5,7 +5,16 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import Task, Attachment, Project, Board, Team, Worker, TaskType
+from .models import (
+    Task,
+    Attachment,
+    Project,
+    Board,
+    Team,
+    Worker,
+    TaskType,
+    Position,
+)
 
 
 class MultipleFileInput(forms.ClearableFileInput):
@@ -67,9 +76,11 @@ class ProjectCreationForm(forms.ModelForm):
         }
 
     def clean_deadline(self):
-        deadline = self.cleaned_data.get('deadline')
+        deadline = self.cleaned_data.get("deadline")
         if not is_deadline_valid(deadline):
-            raise forms.ValidationError("Deadline must be after the current date.")
+            raise forms.ValidationError(
+                "Deadline must be after the current date."
+            )
         return deadline
 
 
@@ -114,9 +125,11 @@ class TaskForm(forms.ModelForm):
         }
 
     def clean_deadline(self):
-        deadline = self.cleaned_data.get('deadline')
+        deadline = self.cleaned_data.get("deadline")
         if not is_deadline_valid(deadline):
-            raise forms.ValidationError("Deadline must be after the current date.")
+            raise forms.ValidationError(
+                "Deadline must be after the current date."
+            )
         return deadline
 
     def save(self, commit=True):
@@ -182,3 +195,10 @@ class WorkerForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = get_user_model()
         fields = UserCreationForm.Meta.fields + ("position", "avatar")
+
+
+class PositionForm(forms.ModelForm):
+
+    class Meta:
+        model = Position
+        fields = "__all__"
