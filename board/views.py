@@ -363,6 +363,13 @@ class WorkerCreateView(LoginRequiredMixin, generic.CreateView):
     success_url = reverse_lazy("board:worker-list")
 
 
+class RegisterView(generic.CreateView):
+    model = get_user_model()
+    template_name = "registration/sing-up.html"
+    form_class = RegisterForm
+    success_url = reverse_lazy("board:project-list")
+
+
 @login_required
 def toggle_assign_to_team(request, pk):
     project = Project.objects.get(id=pk)
