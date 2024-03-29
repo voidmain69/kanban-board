@@ -23,31 +23,26 @@ from board.forms import (
 from board.models import Project, Board, Task, Team, TaskType, Position
 
 
-@login_required
 def index(request):
     """View function for the home page of the site."""
 
-    num_workers = get_user_model().objects.count()
-    num_projects = Project.objects.count()
-    num_tasks = Task.objects.count()
-    num_active_projects = Project.objects.filter(is_completed=False).count()
-    num_finished_projects = num_projects - num_active_projects
-    num_active_tasks = Task.objects.filter(is_completed=False).count()
-    num_finished_tasks = num_tasks - num_active_tasks
-    last_projects = Project.objects.order_by("-pk")[:5]
+    count_of_projects = Project.objects.count()
+    count_of_tasks = Task.objects.count()
+    count_of_users = get_user_model().objects.count()
+    count_of_active_projects = Project.objects.filter(
+        is_completed=False
+    ).count()
 
-    context = {
-        "num_workers": num_workers,
-        "num_projects": num_projects,
-        "num_tasks": num_tasks,
-        "num_active_projects": num_active_projects,
-        "num_active_tasks": num_active_tasks,
-        "num_finished_projects": num_finished_projects,
-        "num_finished_tasks": num_finished_tasks,
-        "last_projects": last_projects,
-    }
-
-    return render(request, "pages/index.html", context=context)
+    return render(
+        request,
+        "pages/index.html",
+        context={
+            "count_of_projects": count_of_projects,
+            "count_of_tasks": count_of_tasks,
+            "count_of_users": count_of_users,
+            "count_of_active_projects": count_of_active_projects,
+        },
+    )
 
 
 class ProjectListView(LoginRequiredMixin, generic.ListView):
