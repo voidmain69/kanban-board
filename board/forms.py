@@ -96,6 +96,12 @@ class BoardCreationForm(forms.ModelForm):
 
 class TaskForm(forms.ModelForm):
 
+    assignees = forms.ModelMultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple,
+        queryset=get_user_model().objects.all(),
+        required=False,
+    )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
