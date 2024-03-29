@@ -20,6 +20,7 @@ from .views import (
     TaskTypeDeleteView,
     BoardCreateView,
     BoardDeleteView,
+    BoardUpdateView,
     WorkerCreateView,
     WorkerListView,
     WorkerDetailView,
@@ -31,6 +32,7 @@ from .views import (
     PositionDetailView,
     PositionDeleteView,
     PositionUpdateView,
+    RegisterView,
 )
 
 urlpatterns = [
@@ -84,6 +86,11 @@ urlpatterns = [
         "boards/<int:pk>/delete/",
         BoardDeleteView.as_view(),
         name="board-delete",
+    ),
+    path(
+        "boards/<int:pk>/update/",
+        BoardUpdateView.as_view(),
+        name="board-update",
     ),
     path(
         "tasks/<int:pk>/delete/", TaskDeleteView.as_view(), name="task-delete"
@@ -144,6 +151,7 @@ urlpatterns = [
         PositionUpdateView.as_view(),
         name="position-update",
     ),
+    path("register/", RegisterView.as_view(), name="register"),
 ]
 
 app_name = "board"
