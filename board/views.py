@@ -93,6 +93,7 @@ class ProjectUpdateView(
 ):
     model = Project
     fields = "__all__"
+    template_name = "board/project_update.html"
     success_url = reverse_lazy("board:project-list")
 
     error_message = (
@@ -106,7 +107,15 @@ class ProjectUpdateView(
 
     def handle_no_permission(self):
         messages.error(self.request, self.error_message)
-        return super().handle_no_permission()
+
+        if self.request.headers.get("x-requested-with") == "XMLHttpRequest":
+            return super().handle_no_permission()
+
+        return redirect(
+            reverse(
+                "board:project-detail", kwargs={"pk": self.kwargs.get("pk")}
+            )
+        )
 
     def form_invalid(self, form):
         return self.render_to_response(
@@ -132,7 +141,11 @@ class ProjectDeleteView(
 
     def handle_no_permission(self):
         messages.error(self.request, self.error_message)
-        return super().handle_no_permission()
+
+        if self.request.headers.get("x-requested-with") == "XMLHttpRequest":
+            return super().handle_no_permission()
+
+        return redirect(reverse("board:project-list"))
 
 
 class ProjectDetailView(LoginRequiredMixin, generic.DetailView):
@@ -183,12 +196,18 @@ class TaskCreateView(
 
     def handle_no_permission(self):
         messages.add_message(self.request, messages.ERROR, self.error_message)
-        return redirect(
-            reverse(
-                "board:project-detail",
-                kwargs={"pk": self.board.project.id},
+
+        if self.request.headers.get("x-requested-with") == "XMLHttpRequest":
+            return JsonResponse(
+                {"error_message": self.error_message}, status=400
             )
-        )
+        else:
+            return redirect(
+                reverse(
+                    "board:project-detail",
+                    kwargs={"pk": self.board.project.id},
+                )
+            )
 
 
 class BoardCreateView(
@@ -232,6 +251,12 @@ class BoardDeleteView(
 ):
     model = Board
 
+    error_message = (
+        "You are not allowed to delete this board. "
+        "Only the owner of the project can "
+        "delete it."
+    )
+
     def get_success_url(self):
         project = self.object.project_id
         return reverse_lazy("board:project-detail", kwargs={"pk": project})
@@ -242,17 +267,50 @@ class BoardDeleteView(
         return user == self.object.project.owner
 
     def handle_no_permission(self):
-        error_message = (
-            "You are not allowed to delete this board. "
-            "Only the owner of the project can "
-            "delete it."
-        )
-        messages.add_message(self.request, messages.ERROR, error_message)
+        messages.error(self.request, self.error_message)
+
+        if self.request.headers.get("x-requested-with") == "XMLHttpRequest":
+            return super().handle_no_permission()
+
         return redirect(
             reverse(
                 "board:project-detail",
                 kwargs={"pk": self.get_object().project.id},
             )
+        )
+
+
+class BoardUpdateView(
+    LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView
+):
+    model = Board
+    fields = "__all__"
+
+    error_message = (
+        "You are not allowed to edit this project. "
+        "Only the owner of the project can delete it."
+    )
+
+    def test_func(self):
+        project = self.get_object().project
+        return project.owner == self.request.user
+
+    def handle_no_permission(self):
+        messages.error(self.request, self.error_message)
+
+        if self.request.headers.get("x-requested-with") == "XMLHttpRequest":
+            return super().handle_no_permission()
+
+        return redirect(
+            reverse(
+                "board:project-detail",
+                kwargs={"pk": self.get_object().project.id},
+            )
+        )
+
+    def form_invalid(self, form):
+        return self.render_to_response(
+            self.get_context_data(form=form, has_errors=True), status=202
         )
 
 
@@ -286,7 +344,9 @@ class WorkerDetailView(LoginRequiredMixin, generic.DetailView):
         context = super().get_context_data(**kwargs)
         worker = self.object
 
-        tasks = worker.tasks.select_related("board__project")
+        tasks = worker.tasks.select_related("board__project").prefetch_related(
+            "assignees"
+        )
 
         tasks_by_projects = {}
         for task in tasks:
@@ -400,6 +460,10 @@ class TaskUpdateView(
         board_id = self.kwargs.get("board_id")
         if board_id:
             initial["board"] = board_id
+
+        if self.object:
+            initial["board"] = self.object.board.id
+
         return initial
 
 
