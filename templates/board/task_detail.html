@@ -1,24 +1,66 @@
-<div class="card border-0">
-  <div class="card-body">
-    <h5 class="card-title">{{ task.name }}</h5>
-    <p class="card-text">{{ task.description }}</p>
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item">Deadline: {{ task.deadline }}</li>
-      <li class="list-group-item">Board: {{ task.board.name }}</li>
-      <li class="list-group-item">Priority: {{ task.get_priority_display }}</li>
-      <li class="list-group-item">Assignees:
-        <ul>
-          {% for assignee in task.assignees.all %}
-            <li>{{ assignee.username }}</li>
-          {% endfor %}
-        </ul>
-      </li>
-      <li class="list-group-item">Attachments:
-        <ul>
-          {% for attachment in task.attachments.all %}
-            <li><a href="{{ attachment.file.url }}">{{ attachment.name }}</a></li>
-          {% endfor %}
-        </ul>
-      </li>
-    </ul>
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <h5>{{ task.name }}</h5>
+      <p>{{ task.description }}</p>
+    </div>
+    <div class="col-md-6">
+      <table class="table">
+        <tbody>
+        <tr>
+          <th>Attribute</th>
+          <th>Value</th>
+        </tr>
+        <tr>
+          <td>Deadline</td>
+          <td>{{ task.deadline }}</td>
+        </tr>
+        <tr>
+          <td>Board</td>
+          <td>{{ task.board.name }}</td>
+        </tr>
+        <tr>
+          <td>Tags</td>
+          <td>
+            <span
+                class="badge rounded-pill {% if task.priority == "High" %}bg-danger{% else %}bg-success{% endif %} text-dark">{{ task.priority }}</span>
+            <span class="badge rounded-pill bg-info text-dark">{{ task.task_type }}</span>
+          </td>
+        </tr>
+        <tr>
+          <td>Assignees</td>
+          <td>
+            <ul class="list-group">
+              {% for assignee in task.assignees.all %}
+                <li class="list-group-item d-flex align-items-center">
+                  {% if assignee.avatar %}
+                    <img src="{{ assignee.avatar.url }}" alt="{{ assignee.username }}" class="rounded-circle mr-3"
+                         style="width: 30px; height: 30px;">
+                  {% else %}
+                    <div class="rounded-circle mr-3"
+                         style="width: 30px; height: 30px; background-color: #007bff; color: #fff; text-align: center; line-height: 30px;">{{ assignee.username|slice:":1" }}</div>
+                  {% endif %}
+                  <span
+                      class="ml-2">
+                    {{ assignee.username }}
+                  </span>
+                </li>
+              {% endfor %}
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>Attachments</td>
+          <td>
+            <ul>
+              {% for attachment in task.attachments.all %}
+                <li><a href="{{ attachment.file.url }}" target="_blank">{{ attachment.name }}</a></li>
+              {% endfor %}
+            </ul>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
+</div>
