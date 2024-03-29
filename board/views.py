@@ -1,23 +1,24 @@
+from django.contrib import messages
 from django.contrib.auth import get_user_model
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.http import HttpResponseRedirect, JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views import generic
-from django.contrib import messages
 
 from board.forms import (
     ProjectSearchForm,
-    TaskForm,
     ProjectCreationForm,
+    TaskForm,
+    TaskTypeForm,
+    TaskChangeBoardForm,
     BoardCreationForm,
     WorkerSearchForm,
-    TeamForm,
     WorkerForm,
-    TaskChangeBoardForm,
-    TaskTypeForm,
+    TeamForm,
     PositionForm,
+    RegisterForm,
 )
 from board.models import Project, Board, Task, Team, TaskType, Position
 
