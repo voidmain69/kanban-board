@@ -57,22 +57,13 @@
       <div class="col-3 px-0 text-end">
         <div class="btn-group">
           <a
-
-              class="btn btn-gray-800"
-          >
-            <svg class="icon icon-xs text-white" fill="currentColor" viewBox="0 0 20 20"
-                 xmlns="http://www.w3.org/2000/svg">
-              <path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path>
-              <path fill-rule="evenodd"
-                    d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"
-                    clip-rule="evenodd"></path>
-            </svg>
-          </a>
-          <a class="btn btn-gray-800 text-white">
+              href="{% url 'board:project-update' project.id %}"
+              title="Update current project"
+              class="btn btn-gray-800 text-white">
             <svg class="icon icon-xs text-white" fill="currentColor" viewBox="0 0 20 20"
                  xmlns="http://www.w3.org/2000/svg">
               <path fill-rule="evenodd"
-                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                    d="M10 3a7 7 0 014.95 11.95l3.54 3.54a1 1 0 11-1.41 1.41l-3.54-3.54A7 7 0 1110 3zm0 4a1 1 0 011 1v4a1 1 0 11-2 0V8a1 1 0 011-1z"
                     clip-rule="evenodd"></path>
             </svg>
           </a>
@@ -117,6 +108,16 @@
                         d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM14 11a1 1 0 011 1v1h1a1 1 0 110 2h-1v1a1 1 0 11-2 0v-1h-1a1 1 0 110-2h1v-1a1 1 0 011-1z"></path>
                   </svg>
                   Add Card </a>
+                <a
+                    class="dropdown-item d-flex align-items-center"
+                    href="{% url 'board:board-update' board.id %}"
+                >
+                  <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20"
+                       xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
+                  </svg>
+                  Edit Board </a>
                 <a
                     class="dropdown-item d-flex align-items-center"
                     href="{% url 'board:board-delete' board.id %}"
