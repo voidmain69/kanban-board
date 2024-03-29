@@ -30,40 +30,46 @@
       </div>
     </div>
   </div>
-  <div class="card card-body shadow border-0 table-wrapper table-responsive">
-    <table class="table user-table table-hover align-items-center">
-      <thead>
-      <tr>
-        <th class="border-bottom">Id</th>
-        <th class="border-bottom">Name</th>
-        <th class="border-bottom">Actions</th>
-      </tr>
-      </thead>
-      <tbody>
-      {% for position in position_list %}
-        <tr>
-          <td><span class="fw-normal">{{ position.id }}</span></td>
-          <td><span class="fw-normal">{{ position.name }}</span></td>
-          <td>
-            <div class="btn-group">
-              <a class="btn btn-secondary btn-sm"
-                      href="{% url 'board:position-update' pk=position.id %}">
-                Update
-              </a>
-              <a type="button" class="btn btn-primary btn-sm"
-                      href="{% url 'board:position-delete' pk=position.id %}">
-                Delete
-              </a>
-            </div>
-          </td>
-        </tr>
-      {% endfor %}
-      </tbody>
-    </table>
-    <div class="card-footer px-3 border-0 d-flex flex-column flex-lg-row align-items-center justify-content-between">
-      <nav aria-label="Page navigation example">
-        {% include "includes/pagination.html" %}
-      </nav>
+  <div class="row">
+    <div class="col-5">
+      <div class="card card-body shadow border-0 table-wrapper table-responsive">
+        <table class="table user-table table-hover align-items-center">
+          <thead>
+          <tr>
+            <th class="border-bottom">Id</th>
+            <th class="border-bottom">Name</th>
+            <th class="border-bottom">Actions</th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for position in position_list %}
+            <tr>
+              <td><span class="fw-normal">{{ position.id }}</span></td>
+              <td><span class="fw-normal">{{ position.name }}</span></td>
+              <td>
+                <div class="btn-group">
+                  <a class="btn btn-secondary btn-sm"
+                     href="{% url 'board:position-update' pk=position.id %}">
+                    Update
+                  </a>
+                  <a type="button" class="btn btn-primary btn-sm"
+                     href="{% url 'board:position-delete' pk=position.id %}">
+                    Delete
+                  </a>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        <div
+            class="card-footer px-3 border-0 d-flex flex-column flex-lg-row align-items-center justify-content-between">
+          <nav aria-label="Page navigation example">
+            {% include "includes/pagination.html" %}
+          </nav>
+        </div>
+      </div>
+
     </div>
   </div>
 
