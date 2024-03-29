@@ -203,6 +203,22 @@ class WorkerForm(UserCreationForm):
         fields = UserCreationForm.Meta.fields + ("position", "avatar")
 
 
+class RegisterForm(UserCreationForm):
+
+    class Meta(UserCreationForm.Meta):
+        model = get_user_model()
+        fields = UserCreationForm.Meta.fields + ("position", "email")
+
+        widgets = {
+            "email": forms.TextInput(
+                attrs={"placeholder": "example@company.com"},
+            ),
+            "username": forms.TextInput(
+                attrs={"placeholder": "Enter Your name"}
+            ),
+        }
+
+
 class PositionForm(forms.ModelForm):
 
     class Meta:
