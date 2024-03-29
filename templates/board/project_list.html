@@ -76,7 +76,14 @@
                   alt="Avatar"
               >
             {% endif %}
-            <div class="d-block"><span class="fw-bold">{{ project.owner }}</span>
+            <div class="d-block">
+              <span class="fw-bold">
+                {% if user == project.owner %}
+                Me
+                {% else %}
+              {{ project.owner }}
+                {% endif %}
+              </span>
               <div class="small text-gray">{{ project.owner.email }}</div>
             </div>
           </a></td>
