@@ -374,16 +374,6 @@ class RegisterView(generic.CreateView):
 def toggle_assign_to_team(request, pk):
     project = Project.objects.get(id=pk)
 
-    # Check if the project has a team
-    if not project.team:
-        # If the project doesn't have a team, create a new team
-        team = Team.objects.create(
-            name=f"team: {project.name[:200]}"
-        )  # Assuming you have a Team model
-        project.team = team
-        project.save()
-
-    # Now proceed to adding/removing the user from the team
     if request.user in project.team.members.all():
         project.team.members.remove(request.user)
     else:
