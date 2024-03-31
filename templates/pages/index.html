@@ -1,0 +1,258 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Index - Kanban Boards Template</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'vendor/main.css' %}" rel="stylesheet">
+
+</head>
+
+<body>
+
+<header id="header" class="header d-flex align-items-center sticky-top">
+  <div class="container-fluid container-xl position-relative d-flex align-items-center">
+
+    <a href="{% url 'board:index' %}" class="logo d-flex align-items-center me-auto">
+      <!-- Uncomment the line below if you also wish to use an image logo -->
+      <!-- <img src="assets/img/logo.png" alt=""> -->
+      <h1 class="">Kanban Boards</h1>
+    </a>
+
+    <nav id="navmenu" class="navmenu">
+      <ul>
+        <li><a href="{% url 'board:index' %}" class="">Home</a></li>
+        <li><a href="{% url 'board:project-list' %}">Projects</a></li>
+      </ul>
+      <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+    </nav>
+
+    {% if not user.is_authenticated %}
+      <a class="btn-getstarted" href="{% url 'login' %}">Login</a>
+    {% endif %}
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- Hero Section -->
+  <section id="hero" class="section hero">
+
+    <div class="container">
+      <div class="row gy-4">
+        <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
+          <h1 class="">Best project management experience with Kanban Boards</h1>
+          <p>Mastering Projects: Kanban Efficiency.</p>
+          <div class="d-flex">
+            {% if user.is_authenticated %}
+              <a href="{% url 'board:project-list' %}" class="btn-get-started">Projects</a>
+            {% else %}
+              <a href="{% url 'login' %}" class="btn-get-started">Login</a>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-lg-6 order-1 order-lg-2 hero-img">
+          <img src="{% static 'assets/img/hero-img.svg' %}" class="img-fluid animated" alt="">
+        </div>
+      </div>
+    </div>
+
+  </section><!-- /Hero Section -->
+
+  <!-- About Section -->
+  <section id="about" class="section about">
+
+    <div class="container">
+
+      <div class="row gy-3">
+
+        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+          <img src="{% static 'assets/img/about-img.svg' %}" alt="" class="img-fluid">
+        </div>
+
+        <div class="col-lg-6 d-flex flex-column justify-content-center" data-aos="fade-up" data-aos-delay="200">
+          <div class="about-content ps-0 ps-lg-3">
+            <h3>Mastering IT Project Management: Kanban as the Key to Efficiency.</h3>
+            <p class="fst-italic">
+              Unlock your project management potential with ease! Our website offers a unique opportunity to manage IT
+              projects effortlessly and efficiently using the Kanban methodology. We provide an intuitive interface
+              where you can create tasks, track their status, allocate resources, and improve processes with flexible
+              project management tools. Take control of your projects today with our innovative service!
+            </p>
+            <ul>
+              <li>
+                <i class="bi bi-diagram-3"></i>
+                <div>
+                  <h4>Collaborate on One or Multiple Projects as a Team</h4>
+                  <p>Enhance project outcomes through teamwork. Our platform offers simple tools for collaborating on
+                    single or multiple projects. Easily share, allocate tasks, and track progress together.
+                    Collaboration is key to success, and we provide the tools you need to achieve it.</p>
+                </div>
+              </li>
+              <li>
+                <i class="bi bi-fullscreen-exit"></i>
+                <div>
+                  <h4>Track Progress for Efficient Time Allocation</h4>
+                  <p>Track progress for better time management. Our platform helps you allocate time effectively by
+                    monitoring progress. Identify bottlenecks and stay on schedule with ease. Take control of your time
+                    for maximum efficiency.</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </section><!-- /About Section -->
+
+  <!-- Services Section -->
+  <section id="services" class="services section">
+
+    <!-- Section Title -->
+    <div class="container section-title" data-aos="fade-up">
+      <h2>Key information</h2>
+      <p>The latest information about the platform.</p>
+    </div><!-- End Section Title -->
+
+    <div class="container">
+
+      <div class="row gy-4">
+
+        <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="100">
+          <div class="service-item position-relative">
+            <div class="icon"><i class="bi bi-activity icon"></i></div>
+            <h4><a href="{% url 'board:project-list' %}" class="stretched-link">Projects</a></h4>
+            <p>The number of active projects on the platform: {{ count_of_projects }}</p>
+          </div>
+        </div><!-- End Service Item -->
+
+        <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="200">
+          <div class="service-item position-relative">
+            <div class="icon"><i class="bi bi-bounding-box-circles icon"></i></div>
+            <h4><a href="{% url 'board:project-list' %}" class="stretched-link">Tasks</a></h4>
+            <p>The number of active tasks on the platform: {{ count_of_tasks }}</p>
+          </div>
+        </div><!-- End Service Item -->
+
+        <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="300">
+          <div class="service-item position-relative">
+            <div class="icon"><i class="bi bi-calendar4-week icon"></i></div>
+            <h4><a href="{% url 'board:worker-list' %}" class="stretched-link">Users</a></h4>
+            <p>The number of active tasks on the platform: {{ count_of_users }}</p>
+          </div>
+        </div><!-- End Service Item -->
+
+        <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="400">
+          <div class="service-item position-relative">
+            <div class="icon"><i class="bi bi-broadcast icon"></i></div>
+            <h4><a href="{% url 'board:index' %}" class="stretched-link">Active Projects</a></h4>
+            <p>The number of active projects on the platform: {{ count_of_active_projects }}</p>
+          </div>
+        </div><!-- End Service Item -->
+
+      </div>
+
+    </div>
+
+  </section><!-- /Services Section -->
+
+</main>
+
+<footer id="footer" class="footer position-relative">
+
+  <div class="container footer-top">
+    <div class="row gy-4">
+      <div class="col-lg-4 col-md-6 footer-about">
+        <a href="{% url 'board:index' %}" class="d-flex align-items-center">
+          <span class="">KanbanBoards</span>
+        </a>
+        <div class="footer-contact pt-3">
+          <p class="mt-3"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
+          <p><strong>Email:</strong> <span>info@example.com</span></p>
+        </div>
+      </div>
+
+      <div class="col-lg-2 col-md-3 footer-links">
+        <h4>Useful Links</h4>
+        <ul>
+          <li><i class="bi bi-chevron-right"></i> <a href="#">Home</a></li>
+          <li><i class="bi bi-chevron-right"></i> <a href="#">Services</a></li>
+        </ul>
+      </div>
+
+      <div class="col-lg-2 col-md-3 footer-links">
+        <h4>Our Services</h4>
+        <ul>
+          <li><i class="bi bi-chevron-right"></i> <a href="#">Product Management</a></li>
+          <li><i class="bi bi-chevron-right"></i> <a href="#">Marketing</a></li>
+        </ul>
+      </div>
+
+      <div class="col-lg-4 col-md-12">
+        <h4>Follow Us</h4>
+        <p>Comprehensive Guide and Presentation of Our Platform on Our Official Social Media Pages</p>
+        <div class="social-links d-flex">
+          <a href=""><i class="bi bi-twitter"></i></a>
+          <a href=""><i class="bi bi-facebook"></i></a>
+          <a href=""><i class="bi bi-instagram"></i></a>
+          <a href=""><i class="bi bi-linkedin"></i></a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="container copyright text-center mt-4">
+    <p>© <span>Copyright</span> <strong class="px-1">KanbanBoards</strong> <span>All Rights Reserved</span></p>
+  </div>
+
+</footer>
+
+<!-- Scroll Top -->
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+    class="bi bi-arrow-up-short"></i></a>
+
+<!-- Preloader -->
+<div id="preloader"></div>
+
+<!-- Vendor JS Files -->
+<script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+<script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+<script src="{% static 'assets/vendor/imagesloaded/imagesloaded.pkgd.min.js' %}"></script>
+<script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+<script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+
+<!-- Main JS File -->
+<script src="{% static 'assets/js/main.js' %}"></script>
+
+</body>
+
+</html>

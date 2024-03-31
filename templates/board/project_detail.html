@@ -1,0 +1,402 @@
+{% extends 'layouts/base.html' %}
+{% load crispy_forms_filters %}
+{% load humanize %}
+{% load static %}
+
+{% block breadcrumbs %}{% endblock breadcrumbs %}
+
+{% block content %}
+  <div class="container-fluid px-3">
+    <div class="row mt-4 mb-3">
+      <div class="col-9 d-flex justify-content-between ps-0">
+        <div class="me-lg-3">
+          {% if user.id == project.owner.id %}
+            <a
+                href="{% url 'board:team-update' pk=project.team.id %}"
+                class="btn btn-secondary d-inline-flex align-items-center me-2"
+            >
+              Manage team
+            </a>
+
+            <a href="{% url 'board:board-create' project.id %}"
+               class="btn btn-secondary d-inline-flex align-items-center me-2"
+            >
+              <svg class="icon icon-xs me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                   xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+              </svg>
+              Add board
+            </a>
+          {% endif %}
+          {% if user in project.team.members.all %}
+            <a href="{% url 'board:toggle-assign-to-team' pk=project.id %}"
+               class="btn btn-secondary d-inline-flex align-items-center me-2"
+            >
+              <svg class="icon icon-xs me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                   xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+              </svg>
+              Leave the team
+            </a>
+          {% else %}
+            <a href="{% url 'board:toggle-assign-to-team' pk=project.id %}"
+               class="btn btn-secondary d-inline-flex align-items-center me-2"
+            >
+              <svg class="icon icon-xs me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                   xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+              </svg>
+              Join the team
+            </a>
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-3 px-0 text-end">
+        <div class="btn-group">
+          <a
+              href="{% url 'board:project-update' project.id %}"
+              title="Update current project"
+              class="btn btn-gray-800 text-white">
+            <svg class="icon icon-xs text-white" fill="currentColor" viewBox="0 0 20 20"
+                 xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd"
+                    d="M10 3a7 7 0 014.95 11.95l3.54 3.54a1 1 0 11-1.41 1.41l-3.54-3.54A7 7 0 1110 3zm0 4a1 1 0 011 1v4a1 1 0 11-2 0V8a1 1 0 011-1z"
+                    clip-rule="evenodd"></path>
+            </svg>
+          </a>
+          <a
+              href="{% url 'board:project-delete' project.id %}"
+              title="Delete current project"
+              class="btn btn-gray-800 text-white"
+          >
+            <svg class="icon icon-xs text-white" fill="currentColor" viewBox="0 0 20 20"
+                 xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd"
+                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                    clip-rule="evenodd"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid kanban-container py-4 px-0">
+    <div class="row d-flex flex-nowrap">
+      {% for board in project.boards.all %}
+        <div class="col-12 col-lg-6 col-xl-4 col-xxl-3">
+          <div class="d-flex justify-content-between align-items-center mb-3"><h5
+              class="fs-6 fw-bold mb-0">{{ board.name }}</h5>
+            <div class="dropdown">
+              <button type="button" class="btn btn-sm fs-6 px-1 py-0 dropdown-toggle" id="dropdownMenuLink"
+                      data-bs-toggle="dropdown" aria-expanded="false">
+                <svg class="icon icon-xs" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                      d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"></path>
+                </svg>
+              </button>
+              <div class="dropdown-menu dashboard-dropdown dropdown-menu-start mt-2 py-1">
+                <a
+                    class="dropdown-item d-flex align-items-center"
+                    href="{% url 'board:task-create' board.id %}"
+                >
+                  <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20"
+                       xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM14 11a1 1 0 011 1v1h1a1 1 0 110 2h-1v1a1 1 0 11-2 0v-1h-1a1 1 0 110-2h1v-1a1 1 0 011-1z"></path>
+                  </svg>
+                  Add Card </a>
+                <a
+                    class="dropdown-item d-flex align-items-center"
+                    href="{% url 'board:board-update' board.id %}"
+                >
+                  <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20"
+                       xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
+                  </svg>
+                  Edit Board </a>
+                <a
+                    class="dropdown-item d-flex align-items-center"
+                    href="{% url 'board:board-delete' board.id %}"
+                >
+                  <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20"
+                       xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 2a1 1 0 000 2h2a1 1 0 100-2H8z"></path>
+                    <path
+                        d="M3 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v6h-4.586l1.293-1.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L10.414 13H15v3a2 2 0 01-2 2H5a2 2 0 01-2-2V5zM15 11h2a1 1 0 110 2h-2v-2z"></path>
+                  </svg>
+                  Delete Board </a></div>
+            </div>
+          </div>
+          <div id="kanbanColumn1" class="list-group kanban-list">
+            {% for task in board.tasks.all %}
+              <div class="card border-0 shadow p-4">
+                <div class="card-header d-flex align-items-center justify-content-between border-0 p-0 mb-3">
+                  <h3 class="h5 mb-0 {% if task.is_completed %}line-through{% endif %}">
+                    <a data-toggle="modal" data-target="#taskModal" data-task-id="{{ task.id }}">{{ task.name }}</a>
+                  </h3>
+                  <div>
+                    <div class="dropdown">
+                      <button type="button" class="btn btn-sm fs-6 px-1 py-0 dropdown-toggle" id="dropdownMenuLink"
+                              data-bs-toggle="dropdown" aria-expanded="false">
+                        <svg class="icon icon-xs text-gray-500" fill="currentColor" viewBox="0 0 20 20"
+                             xmlns="http://www.w3.org/2000/svg">
+                          <path
+                              d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path>
+                          <path fill-rule="evenodd"
+                                d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                      </button>
+                      <div class="dropdown-menu dashboard-dropdown dropdown-menu-start mt-2 py-1">
+                        <a
+                            class="dropdown-item d-flex align-items-center"
+                            href="{% url 'board:task-update' pk=task.id %}"
+                        >
+                          <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20"
+                               xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
+                          </svg>
+                          Edit Task </a>
+                        <a
+                            class="dropdown-item d-flex align-items-center"
+                            href="{% url 'board:task-change-board' pk=task.id %}"
+                        >
+                          <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20"
+                               xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
+                          </svg>
+                          Change Board </a>
+                        <div role="separator" class="dropdown-divider my-1"></div>
+
+                        <a class="delete-task-btn dropdown-item d-flex align-items-center" data-task-id="{{ task.id }}">
+                          <svg class="dropdown-icon text-danger me-2" fill="currentColor" viewBox="0 0 20 20"
+                               xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                  d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                  clip-rule="evenodd"></path>
+                          </svg>
+                          Remove</a></div>
+
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body p-0"><p>
+                  {{ task.attachments.all.0 }}
+                  {% if task.attachments.all %}
+                    {% for attachment in task.attachments.all %}
+                      {% if attachment.file.url|lower|slice:"-3:" == "jpg" or attachment.file.url|lower|slice:"-4:" == "jpeg" or attachment.file.url|lower|slice:"-3:" == "png" %}
+                        <img
+                            src="{{ attachment.file.url }}"
+                            alt="{{ attachment.name }}"
+                            class="card-img-top mb-2 mb-lg-3"
+                            onclick="openImageModal('{{ attachment.file.url }}', '{{ attachment.name }}')"
+                        >
+                      {% endif %}
+                    {% endfor %}
+                  {% endif %}
+                  <p class="card-text">{{ task.description|linebreaksbr|slice:":300" }}</p>
+                  <div class="border-top">
+                    <div class="mt-2">
+                    <span
+                        class="badge rounded-pill {% if task.priority == "High" %}bg-danger{% else %}bg-success{% endif %} text-dark">{{ task.priority }}</span>
+                      <span class="badge rounded-pill bg-info text-dark">{{ task.task_type }}</span>
+                    </div>
+                    <div class="mt-2">
+                      Deadline: {{ task.deadline }}
+                    </div>
+                    <h5 class="fs-6 fw-normal mt-4">
+                      <a href="{% url 'board:team-update' pk=project.team.id %}">
+                        {{ task.assignees.count }} Assignees
+                      </a>
+                    </h5>
+                    <div class="avatar-group">
+                      {% for worker in task.assignees.all %}
+                        <a href="#"
+                           class="avatar"
+                           data-bs-toggle="tooltip"
+                           data-original-title="{{ worker.username }}"
+                           data-bs-original-title="{{ worker.username }}"
+                           title="">
+                          {% if worker.avatar %}
+                            <img
+                                class="rounded"
+                                alt="Image placeholder"
+                                src="{{ worker.avatar.url }}"
+                            >
+                          {% else %}
+                            <div
+                                class="performer avatar d-flex align-items-center justify-content-center fw-bold bg-secondary me-3">
+                              <span>{{ worker.username.0|upper }}</span></div>
+                          {% endif %}
+                        </a>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+            <a type="button"
+               class="btn btn-outline-gray-500 d-inline-flex align-items-center justify-content-center dashed-outline new-card w-100"
+               href="{% url 'board:task-create' board.id %}">
+              <svg class="icon icon-xs me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                   xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+              </svg>
+              Add another card
+            </a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+    <div class="d-block mb-4 mb-md-0">
+      <h2 class="h4">Project Team</h2>
+      <p class="mb-0">Your web analytics dashboard template.</p></div>
+  </div>
+
+  <div class="card card-body shadow mt-4 border-0 table-wrapper table-responsive">
+    <table class="table user-table table-hover align-items-center">
+      <thead>
+      <tr>
+        <th class="border-bottom">Name</th>
+        <th class="border-bottom">Position</th>
+        <th class="border-bottom">Tasks</th>
+        <th class="border-bottom">Action</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for worker in project.team.members.all %}
+        <tr>
+          <td><a href="{% url 'board:worker-detail' worker.id %}" class="d-flex align-items-center">
+            {% if not worker.avatar %}
+              <div class="avatar d-flex align-items-center justify-content-center fw-bold rounded bg-secondary me-3">
+                <span>{{ worker.username.0|upper }}</span></div>
+            {% else %}
+              <img
+                  src="{{ worker.avatar.url }}"
+                  class="avatar rounded-circle me-3"
+                  alt="Avatar"
+              >
+            {% endif %}
+            <div class="d-block"><span class="fw-bold">{{ worker.username }}</span>
+              <div class="small text-gray">{{ worker.email }}</div>
+            </div>
+          </a></td>
+          <td>
+            <p class="m-0">{{ worker.position }}</p>
+          </td>
+          <td>
+            <p class="m-0">{{ worker.tasks.count }}</p>
+          </td>
+          <td>
+            <div class="btn-group">
+
+              ...
+
+            </div>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    <div class="card-footer px-3 border-0 d-flex flex-column flex-lg-row align-items-center justify-content-between">
+      <nav aria-label="Page navigation example">
+        {% include "includes/pagination.html" %}
+      </nav>
+    </div>
+  </div>
+
+  <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="imageModalLabel">Image</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <img id="modalImage" src="" alt="">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="deleteTaskModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">DELETE</h5>
+        </div>
+        <div class="modal-body">
+          Are you sure?
+        </div>
+        <div class="modal-footer">
+          <button id="cancelDeleteBtn" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button id="confirmDeleteBtn" type="button" class="btn btn-danger">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% include 'board/modal/task_detail.html' %}
+  {% include 'board/modal/modal.html' with modal_content=messages %}
+  <script>
+      function openImageModal(imageUrl, imageName) {
+          $('#modalImage').attr('src', imageUrl);
+          $('#imageModalLabel').text(imageName);
+          $('#imageModal').modal('show');
+      }
+
+      $(document).ready(function () {
+
+          let taskIdToDelete;
+
+
+          $(".delete-task-btn").click(function () {
+              taskIdToDelete = $(this).data("task-id");
+              $('#deleteTaskModal').modal('show')
+          });
+
+          $("#cancelDeleteBtn").click(function () {
+              $('#deleteTaskModal').modal('hide')
+          });
+
+          $("#confirmDeleteBtn").click(function () {
+              $('#deleteTaskModal').modal('hide');
+              $.ajax({
+                  type: "POST",
+                  url: "{% url 'board:task-delete' pk=0 %}".replace('0', taskIdToDelete),
+                  data: {
+                      csrfmiddlewaretoken: '{{ csrf_token }}'
+                  },
+                  success: function () {
+                      location.reload();
+                  },
+                  error: function (xhr, status, error) {
+                      console.log("Error occurred while performing the request:", error);
+                      location.reload();
+                  }
+              });
+          });
+
+          {% if messages %}
+              $('#myModal').modal('show');
+          {% endif %}
+
+      });
+
+  </script>
+{% endblock content %}

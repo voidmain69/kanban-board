@@ -1,0 +1,22 @@
+{% extends 'layouts/base.html' %}
+{% load crispy_forms_filters %}
+{% load static %}
+
+{% block content %}
+
+<div class="py-4">
+  <div class="d-flex justify-content-between w-100 flex-wrap">
+    <div class="mb-3 mb-lg-0"><h1>Update project</h1>
+    </div>
+  </div>
+  <div class="card border-0">
+    <div class="card-body">
+        <form id="projectForm" method="post" novalidate>
+          {% csrf_token %}
+          {{ form|crispy }}
+          <input type="submit" value="Submit" class="btn btn-primary">
+        </form>
+    </div>
+  </div>
+
+{% endblock %}

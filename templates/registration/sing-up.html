@@ -1,0 +1,35 @@
+{% extends 'layouts/base-auth.html' %}
+{% load crispy_forms_filters %}
+{% load static %}
+{% block content %}
+<!-- Section -->
+<section class="d-flex align-items-center my-5 mt-lg-4 mb-lg-5">
+  <div class="container">
+    <p class="text-center"><a href="{% url 'board:index' %}" class="text-gray-700"><i class="fas fa-angle-left mr-2"></i> Back
+      to homepage</a></p>
+    <div class="row justify-content-center form-bg-image"
+         data-background-lg="{% static 'assets/img/signin.svg' %}"
+         style="background: url({% static 'assets/img/signin.svg' %});">
+      <div class="col-12 d-flex align-items-center justify-content-center">
+        <div class="mb-4 mb-lg-0 bg-white shadow-soft border rounded border-light p-4 p-lg-5 w-100 fmxw-500">
+          <div class="text-center text-md-center mb-4 mt-md-0">
+            <h1 class="mb-0 h3">Create an account</h1>
+          </div>
+          <form method="POST">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <div class="d-grid"><button type="submit" class="btn btn-gray-800">Sign up</button></div>
+          </form>
+
+          <div class="d-flex justify-content-center align-items-center mt-4">
+                                <span class="font-weight-normal">
+                                    Already have an account?
+                                    <a href="{% url 'login' %}" class="font-weight-bold">Login here</a>
+                                </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
