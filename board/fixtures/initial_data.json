@@ -32,12 +32,12 @@
     "pk": 1,
     "fields": {
       "username": "john_doe",
-      "password": "36e49f9ca6c5d1b5f892c844717f8d8e",
+      "password": "",
       "first_name": "John",
       "last_name": "Doe",
       "email": "john@example.com",
       "position": 1,
-      "avatar": null
+      "avatar": "avatars/profile-picture-1.jpg"
     }
   },
   {
@@ -45,12 +45,38 @@
     "pk": 2,
     "fields": {
       "username": "jane_smith",
-      "password": "36e49f9ca6c5d1b5f892c844717f8d8e",
+      "password": "",
       "first_name": "Jane",
       "last_name": "Smith",
       "email": "jane@example.com",
       "position": 2,
-      "avatar": null
+      "avatar": "avatars/profile-picture-2.jpg"
+    }
+  },
+  {
+    "model": "board.worker",
+    "pk": 3,
+    "fields": {
+      "username": "emily_jones",
+      "password": "",
+      "first_name": "Emily",
+      "last_name": "Jones",
+      "email": "emily@example.com",
+      "position": 3,
+      "avatar": "avatars/profile-picture-3.jpg"
+    }
+  },
+  {
+    "model": "board.worker",
+    "pk": 4,
+    "fields": {
+      "username": "alex_smith",
+      "password": "",
+      "first_name": "Alex",
+      "last_name": "Smith",
+      "email": "alex@example.com",
+      "position": 2,
+      "avatar": "avatars/profile-picture-4.jpg"
     }
   },
   {
@@ -58,7 +84,11 @@
     "pk": 1,
     "fields": {
       "name": "Development Team 1",
-      "members": [1, 2]
+      "members": [
+        1,
+        2,
+        3
+      ]
     }
   },
   {
@@ -66,7 +96,10 @@
     "pk": 2,
     "fields": {
       "name": "Development Team 2",
-      "members": [1]
+      "members": [
+        1,
+        4
+      ]
     }
   },
   {
@@ -105,7 +138,7 @@
       "description": "Develop an e-commerce platform for online shopping.",
       "deadline": "2024-12-31",
       "is_completed": false,
-      "owner": 1
+      "owner": 2
     }
   },
   {
@@ -139,7 +172,9 @@
       "is_completed": false,
       "priority": "High",
       "task_type": 1,
-      "assignees": [1],
+      "assignees": [
+        1
+      ],
       "attachments": []
     }
   },
@@ -154,8 +189,12 @@
       "is_completed": false,
       "priority": "Urgent",
       "task_type": 2,
-      "assignees": [2],
-      "attachments": [1]
+      "assignees": [
+        2,3
+      ],
+      "attachments": [
+        1
+      ]
     }
   },
   {
@@ -169,7 +208,10 @@
       "is_completed": false,
       "priority": "Medium",
       "task_type": 1,
-      "assignees": [1, 2],
+      "assignees": [
+        1,
+        2
+      ],
       "attachments": []
     }
   },
@@ -184,7 +226,9 @@
       "is_completed": false,
       "priority": "Low",
       "task_type": 1,
-      "assignees": [1],
+      "assignees": [
+        1
+      ],
       "attachments": []
     }
   },
@@ -226,7 +270,10 @@
       "is_completed": false,
       "priority": "High",
       "task_type": 1,
-      "assignees": [1, 2],
+      "assignees": [
+        1,
+        2
+      ],
       "attachments": []
     }
   },
@@ -241,7 +288,9 @@
       "is_completed": false,
       "priority": "Urgent",
       "task_type": 2,
-      "assignees": [2],
+      "assignees": [
+        2
+      ],
       "attachments": []
     }
   },
@@ -256,7 +305,9 @@
       "is_completed": false,
       "priority": "Medium",
       "task_type": 1,
-      "assignees": [1],
+      "assignees": [
+        1
+      ],
       "attachments": []
     }
   },
@@ -271,7 +322,9 @@
       "is_completed": false,
       "priority": "Low",
       "task_type": 1,
-      "assignees": [2],
+      "assignees": [
+        2
+      ],
       "attachments": []
     }
   },
@@ -280,7 +333,9 @@
     "pk": 3,
     "fields": {
       "name": "Development Team 3",
-      "members": [2]
+      "members": [
+        2
+      ]
     }
   },
   {
@@ -333,7 +388,10 @@
       "is_completed": false,
       "priority": "High",
       "task_type": 1,
-      "assignees": [1, 2],
+      "assignees": [
+        1,
+        2
+      ],
       "attachments": []
     }
   },
@@ -348,8 +406,12 @@
       "is_completed": false,
       "priority": "Urgent",
       "task_type": 2,
-      "assignees": [2],
-      "attachments": [1]
+      "assignees": [
+        2
+      ],
+      "attachments": [
+        1
+      ]
     }
   },
   {
@@ -363,7 +425,9 @@
       "is_completed": false,
       "priority": "Medium",
       "task_type": 1,
-      "assignees": [1],
+      "assignees": [
+        1
+      ],
       "attachments": []
     }
   },
@@ -378,7 +442,9 @@
       "is_completed": false,
       "priority": "Low",
       "task_type": 1,
-      "assignees": [2],
+      "assignees": [
+        2
+      ],
       "attachments": []
     }
   },
@@ -432,7 +498,10 @@
       "is_completed": false,
       "priority": "High",
       "task_type": 1,
-      "assignees": [1, 2],
+      "assignees": [
+        1,
+        2
+      ],
       "attachments": []
     }
   },
@@ -447,7 +516,9 @@
       "is_completed": false,
       "priority": "Urgent",
       "task_type": 2,
-      "assignees": [2],
+      "assignees": [
+        2
+      ],
       "attachments": []
     }
   },
@@ -462,7 +533,9 @@
       "is_completed": false,
       "priority": "Medium",
       "task_type": 1,
-      "assignees": [1],
+      "assignees": [
+        1
+      ],
       "attachments": []
     }
   },
@@ -477,7 +550,9 @@
       "is_completed": false,
       "priority": "Low",
       "task_type": 1,
-      "assignees": [2],
+      "assignees": [
+        2
+      ],
       "attachments": []
     }
   },
@@ -520,64 +595,75 @@
       "color": "#FFFFFF"
     }
   },
- {
-   "model": "board.task",
-   "pk": 17,
-   "fields": {
-     "name": "Implement course management",
-     "board": 13,
-     "description": "Implement course management functionality for the educational platform",
-     "deadline": "2024-07-20",
-     "is_completed": false,
-     "priority": "High",
-     "task_type": 1,
-     "assignees": [1, 2],
-     "attachments": []
-   }
- },
- {
-   "model": "board.task",
-   "pk": 18,
-   "fields": {
-     "name": "Fix video streaming issue",
-     "board": 14,
-     "description": "Fix the issue with video streaming causing buffering and quality drops",
-     "deadline": "2024-07-15",
-     "is_completed": false,
-     "priority": "Urgent",
-     "task_type": 2,
-     "assignees": [2],
-     "attachments": [1]
-   }
- },
- {
-   "model": "board.task",
-   "pk": 19,
-   "fields": {
-     "name": "Implement virtual classroom",
-     "board": 15,
-     "description": "Implement a virtual classroom for live lectures and collaboration",
-     "deadline": "2024-08-01",
-     "is_completed": false,
-     "priority": "Medium",
-     "task_type": 1,
-     "assignees": [1],
-     "attachments": []
-   }
- },
- {
-   "model": "board.task",
-   "pk": 20,
-   "fields": {
-     "name": "Optimize content delivery",
-     "board": 15,
-     "description": "Optimize content delivery for better performance and faster loading times",
-     "deadline": "2024-08-15",
-     "is_completed": false,
-     "priority": "Low",
-     "task_type": 1,
-     "assignees": [2],
-     "attachments": []
-   }
- }
+  {
+    "model": "board.task",
+    "pk": 17,
+    "fields": {
+      "name": "Implement course management",
+      "board": 13,
+      "description": "Implement course management functionality for the educational platform",
+      "deadline": "2024-07-20",
+      "is_completed": false,
+      "priority": "High",
+      "task_type": 1,
+      "assignees": [
+        1,
+        2
+      ],
+      "attachments": []
+    }
+  },
+  {
+    "model": "board.task",
+    "pk": 18,
+    "fields": {
+      "name": "Fix video streaming issue",
+      "board": 14,
+      "description": "Fix the issue with video streaming causing buffering and quality drops",
+      "deadline": "2024-07-15",
+      "is_completed": false,
+      "priority": "Urgent",
+      "task_type": 2,
+      "assignees": [
+        2
+      ],
+      "attachments": [
+        1
+      ]
+    }
+  },
+  {
+    "model": "board.task",
+    "pk": 19,
+    "fields": {
+      "name": "Implement virtual classroom",
+      "board": 15,
+      "description": "Implement a virtual classroom for live lectures and collaboration",
+      "deadline": "2024-08-01",
+      "is_completed": false,
+      "priority": "Medium",
+      "task_type": 1,
+      "assignees": [
+        1
+      ],
+      "attachments": []
+    }
+  },
+  {
+    "model": "board.task",
+    "pk": 20,
+    "fields": {
+      "name": "Optimize content delivery",
+      "board": 15,
+      "description": "Optimize content delivery for better performance and faster loading times",
+      "deadline": "2024-08-15",
+      "is_completed": false,
+      "priority": "Low",
+      "task_type": 1,
+      "assignees": [
+        2
+      ],
+      "attachments": []
+    }
+  }
 ]
