@@ -32,7 +32,7 @@
     "pk": 1,
     "fields": {
       "username": "john_doe",
-      "password": "36e49f9ca6c5d1b5f892c844717f8d8e",
+      "password": "",
       "first_name": "John",
       "last_name": "Doe",
       "email": "john@example.com",
@@ -45,7 +45,7 @@
     "pk": 2,
     "fields": {
       "username": "jane_smith",
-      "password": "36e49f9ca6c5d1b5f892c844717f8d8e",
+      "password": "",
       "first_name": "Jane",
       "last_name": "Smith",
       "email": "jane@example.com",
